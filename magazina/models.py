@@ -72,12 +72,12 @@ class Produkti(models.Model):
             if errors:
                 raise ValidationError(errors)
 
-   def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
 
         if not self.qr_code:
-            domain = os.environ.get('RAILWAY_PUBLIC_DOMAIN', '127.0.0.1:8000')
-            protocol = 'https' if os.environ.get('RAILWAY_PUBLIC_DOMAIN') else 'http'
+            domain = os.environ.get('RAILWAY_PUBLIC_DOMAIN', 'e-inventory.up.railway.app')
+            protocol = 'https'
             linku_produktit = f"{protocol}://{domain}/admin/magazina/produkti/{self.id}/change/"
             
             qr = qrcode.make(linku_produktit)
