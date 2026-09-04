@@ -42,3 +42,12 @@ if settings.DEBUG:
 admin.site.site_header = "E Inventory"
 admin.site.site_title = "E Inventory"
 admin.site.index_title = "E Inventory"
+
+
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    # rrugët ekzistuese...
+    path('produkti/<int:produkt_id>/fshi/', views.fshi_produktin, name='fshi_produktin'),
+]
