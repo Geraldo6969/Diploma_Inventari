@@ -780,3 +780,19 @@ def eksporto_word(request):
     response['Content-Disposition'] = f'attachment; filename=Raporti_Inventarit_{timezone.localdate()}.docx'
     doc.save(response)
     return response
+
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib import messages
+from .models import Produkti
+
+def fshi_produktin(request, produkt_id):
+    produkti = get_object_or_404(Produkti, id=produkt_id)
+    
+    # Fshin edhe skedarin e fotos së QR kodit nga serveri nëse ekziston
+    if produkti.qr_code:
+        produkti.qr_code.delete(save=False)
+        
+    emri = produkti.emri
+    produkti.delete()
+    messages.success(request, f"Produkti '{emri}' u fshi me sukses!")
+    return redirect('emri_i_faqes_se_inventarit')  # Vendos emrin e rrugës ku listohen produktet

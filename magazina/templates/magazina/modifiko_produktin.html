@@ -211,6 +211,17 @@
                 <div class="d-flex align-items-center gap-3 mt-4 pt-3 border-top">
                     <button type="submit" class="btn-save"><i class="fa-solid fa-floppy-disk"></i> Ruaj Ndryshimet</button>
                     <a href="{% url 'home' %}" class="btn-cancel">Anulo</a>
+                    <div class="d-flex align-items-center gap-3 mt-4 pt-3 border-top">
+    <button type="submit" class="btn-save"><i class="fa-solid fa-floppy-disk"></i> Ruaj</button>
+    <a href="{% url 'home' %}" class="btn-cancel">Anulo</a>
+    
+    <a href="{% url 'fshi_produktin' produkti.id %}" 
+       onclick="return confirm('A je i sigurt që dëshiron ta fshish këtë produkt përfundimisht?');" 
+       class="btn btn-danger ms-auto"
+       style="background-color: #dc3545; color: white; padding: 10px 18px; border-radius: 8px; text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; gap: 8px;">
+        <i class="fa-solid fa-trash-can"></i> Fshi Produktin
+    </a>
+</div>
                 </div>
             </form>
         </div>
