@@ -78,7 +78,9 @@ class Produkti(models.Model):
         if not self.qr_code:
             # Vendosim URL-në e plotë që ta hapë shfletuesi i telefonit
             # Shënim: Nëse përdor Ngrok, zëvendësoje këtë link me linkun tënd të Ngrok (p.sh. f'https://xxxx.ngrok-free.app/admin/magazina/produkti/{self.id}/change/')
-            linku_produktit = f"http://127.0.0.1:8000/admin/magazina/produkti/{self.id}/change/"
+            domain = os.environ.get('RAILWAY_PUBLIC_DOMAIN', '127.0.0.1:8000')
+protocol = 'https' if os.environ.get('RAILWAY_PUBLIC_DOMAIN') else 'http'
+linku_produktit = f"{protocol}://{domain}/admin/magazina/produkti/{self.id}/change/"
             
             qr = qrcode.make(linku_produktit)
             canvas = BytesIO()
