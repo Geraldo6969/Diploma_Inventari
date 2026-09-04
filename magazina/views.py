@@ -793,4 +793,4 @@ def fshi_produktin(request, produkt_id):
     emri = produkti.emri
     produkti.delete()
     messages.success(request, f"Produkti '{emri}' u fshi me sukses!")
-    return redirect('lista_produkteve')  # Ose rruga ku kthehet lista e produkteve
+    return redirect('home')  # <-- Ndryshoje këtu në 'home'
