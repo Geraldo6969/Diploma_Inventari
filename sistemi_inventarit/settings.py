@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'sistemi_inventarit.wsgi.application'
 
 import os
 
-if 'MYSQLHOST' in os.environ or 'MYSQL_URL' in os.environ:
+if os.environ.get('MYSQLHOST') or os.environ.get('MYSQL_URL'):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
@@ -85,7 +85,7 @@ if 'MYSQLHOST' in os.environ or 'MYSQL_URL' in os.environ:
             'USER': os.environ.get('MYSQLUSER', 'root'),
             'PASSWORD': os.environ.get('MYSQLPASSWORD', ''),
             'HOST': os.environ.get('MYSQLHOST'),
-            'PORT': os.environ.get('MYSQLPORT', '3306'),
+            'PORT': int(os.environ.get('MYSQLPORT', 3306)),
         }
     }
 else:
@@ -96,10 +96,9 @@ else:
             'USER': 'root',
             'PASSWORD': '',
             'HOST': '127.0.0.1',
-            'PORT': '3306',
+            'PORT': 3306,
         }
     }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
