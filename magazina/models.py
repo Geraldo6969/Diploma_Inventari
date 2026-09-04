@@ -72,12 +72,10 @@ class Produkti(models.Model):
             if errors:
                 raise ValidationError(errors)
 
-    def save(self, *args, **kwargs):
-        # Ruajmë fillimisht që produkti të marrë një ID
+   def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
 
-if not self.qr_code:
-            # Vendosim URL-në e plotë që ta hapë shfletuesi i telefonit
+        if not self.qr_code:
             domain = os.environ.get('RAILWAY_PUBLIC_DOMAIN', '127.0.0.1:8000')
             protocol = 'https' if os.environ.get('RAILWAY_PUBLIC_DOMAIN') else 'http'
             linku_produktit = f"{protocol}://{domain}/admin/magazina/produkti/{self.id}/change/"
@@ -91,8 +89,7 @@ if not self.qr_code:
             super().save(update_fields=['qr_code'])
 
     def __str__(self):
-        return f"{self.emri} ({self.sasia} {self.njesia_matese})"
-
+        return self.emri
 
 class LevizjeStoku(models.Model):
     LLOJI_CHOICES = [
