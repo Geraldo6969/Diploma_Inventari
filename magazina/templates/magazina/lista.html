@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+{% load inventory_filters %}
+<html lang="sq">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>E-Inventory - Produktet</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #101827;
+            --muted: #6b7280;
+            --line: #d8deea;
+            --panel: #ffffff;
+            --page: #f2f5fb;
+            --nav: #07172f;
+            --accent: #7c3aed;
+            --accent-2: #dc2626;
+            --warning: #b45309;
+            --danger: #dc2626;
+            --navy: #0b1f3f;
+            --purple: #7c3aed;
+            --red: #dc2626;
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+            color: var(--ink);
+            background:
+                linear-gradient(120deg, rgba(11, 31, 63, 0.13), transparent 34%),
+                linear-gradient(220deg, rgba(124, 58, 237, 0.12), transparent 30%),
+                linear-gradient(35deg, rgba(220, 38, 38, 0.08), transparent 24%),
+                var(--page);
+        }
+
+        .app-shell { display: flex; min-height: 100vh; }
+        .sidebar {
+            position: fixed;
+            inset: 0 auto 0 0;
+            width: 264px;
+            padding: 26px 22px;
+            background: var(--nav);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-right: 1px solid rgba(255,255,255,0.08);
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 34px;
+            color: #ddd6fe;
+            font-weight: 800;
+            font-size: 21px;
+        }
+        .brand-icon {
+            width: 38px;
+            height: 38px;
+            display: grid;
+            place-items: center;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--purple), var(--red));
+            color: #fff;
+        }
+        .sidebar-menu { list-style: none; margin: 0; padding: 0; display: grid; gap: 7px; }
+        .sidebar-menu a,
+        .logout-btn {
+            width: 100%;
+            min-height: 44px;
+            padding: 11px 13px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            border: 0;
+            background: transparent;
+            color: #a7b6c9;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 700;
+            transition: background .16s ease, color .16s ease;
+        }
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active { background: rgba(124, 58, 237, .2); color: #ffffff; }
+        .logout-btn { color: #fecaca; text-align: left; cursor: pointer; }
+        .logout-btn:hover { background: rgba(185, 28, 28, .16); color: #fff; }
+
+        .main-content {
+            width: calc(100% - 264px);
+            margin-left: 264px;
+            padding: 34px;
+        }
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+        .eyebrow {
+            color: var(--red);
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            margin-bottom: 7px;
+        }
+        h1 { margin: 0; font-size: 31px; line-height: 1.15; font-weight: 800; letter-spacing: 0; }
+        .subtitle { margin: 7px 0 0; color: var(--muted); font-size: 14px; }
+        .btn-action {
+            min-height: 44px;
+            padding: 0 16px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            border: 1px solid var(--purple);
+            background: linear-gradient(135deg, var(--purple), #5b21b6);
+            color: white;
+            font-size: 14px;
+            font-weight: 800;
+            text-decoration: none;
+            box-shadow: 0 10px 22px rgba(124, 58, 237, .24);
+        }
+        .btn-action:hover { color: white; background: #6d28d9; }
+
+        .toolbar,
+        .table-panel {
+            background: rgba(255,255,255,.92);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            box-shadow: 0 18px 38px rgba(15, 23, 42, .06);
+        }
+        .toolbar {
+            padding: 14px;
+            margin-bottom: 14px;
+        }
+        .filter-header {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin-bottom: 12px;
+            color: var(--navy);
+            font-size: 13px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+        }
+        .filter-grid {
+            display: grid;
+            grid-template-columns: minmax(220px, 1.6fr) minmax(140px, .7fr) minmax(160px, .8fr) minmax(170px, .9fr) auto auto;
+            gap: 10px;
+            align-items: end;
+        }
+        .field-label {
+            display: block;
+            margin: 0 0 6px;
+            color: var(--navy);
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+        }
+        .control {
+            width: 100%;
+            min-height: 42px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 9px 11px;
+            background: #fff;
+            color: #172033;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .control:focus {
+            border-color: var(--purple);
+            box-shadow: 0 0 0 4px rgba(124, 58, 237, .14);
+            outline: 0;
+        }
+        .btn-filter,
+        .btn-reset {
+            min-height: 42px;
+            border-radius: 8px;
+            padding: 0 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 800;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+        .btn-filter { border: 1px solid var(--purple); background: var(--purple); color: #fff; }
+        .btn-reset { border: 1px solid #fecaca; background: #fff5f5; color: var(--red); }
+
+        .table-panel { overflow: hidden; }
+        .panel-meta {
+            min-height: 54px;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 14px;
+            border-bottom: 1px solid var(--line);
+        }
+        .metric {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--navy);
+            font-size: 13px;
+            font-weight: 800;
+        }
+        table { margin: 0; min-width: 1040px; }
+        thead th {
+            padding: 13px 15px !important;
+            background: #f6f3ff !important;
+            border-bottom: 1px solid var(--line) !important;
+            color: var(--navy);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+        tbody td {
+            padding: 15px !important;
+            border-bottom: 1px solid #edf2f7 !important;
+            vertical-align: middle;
+            color: #243044;
+            font-size: 14px;
+        }
+        tbody tr:hover { background: #faf7ff; }
+        .product-name { font-size: 15px; font-weight: 800; color: #111827; }
+        .row-actions { display: flex; align-items: center; gap: 10px; margin-top: 5px; flex-wrap: wrap; }
+        .row-actions a { color: var(--purple); font-size: 12px; font-weight: 800; text-decoration: none; }
+        .row-actions a.edit { color: var(--red); }
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            min-height: 28px;
+            padding: 4px 9px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+        .chip-stock { background: #ede9fe; color: #5b21b6; }
+        .chip-low { background: #fee2e2; color: var(--danger); }
+        .chip-offer { background: #f3e8ff; color: #7c3aed; }
+        .chip-neutral { background: #eef2f7; color: var(--navy); }
+        .chip-expiry { background: #fef3c7; color: var(--warning); }
+        .price-main { font-weight: 800; color: #111827; }
+        .price-muted { color: #94a3b8; text-decoration: line-through; font-size: 12px; font-weight: 700; }
+        .qr-img {
+            width: 46px;
+            height: 46px;
+            border-radius: 8px;
+            padding: 3px;
+            border: 1px solid var(--line);
+            background: #fff;
+            cursor: pointer;
+        }
+        .empty-state { padding: 46px 16px; text-align: center; color: var(--muted); font-weight: 700; }
+
+        @media (max-width: 980px) {
+            .sidebar { position: static; width: 100%; height: auto; }
+            .app-shell { display: block; }
+            .main-content { width: 100%; margin-left: 0; padding: 20px; }
+            .topbar { flex-direction: column; }
+            .filter-grid { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 640px) {
+            .filter-grid { grid-template-columns: 1fr; }
+            h1 { font-size: 25px; }
+            .main-content { padding: 16px; }
+            .panel-meta { align-items: flex-start; flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+<div class="app-shell">
+    <aside class="sidebar">
+        <div>
+            <div class="brand"><span class="brand-icon"><i class="fa-solid fa-cubes"></i></span> E-Inventory</div>
+            <ul class="sidebar-menu">
+                <li><a href="{% url 'home' %}" class="active"><i class="fa-solid fa-boxes-stacked"></i> Produktet</a></li>
+                <li><a href="{% url 'shto_produkt' %}"><i class="fa-solid fa-plus"></i> Shto Produkt</a></li>
+                <li><a href="{% url 'raportet' %}"><i class="fa-solid fa-chart-line"></i> Raportet</a></li>
+                <li><a href="{% url 'importo_excel' %}"><i class="fa-solid fa-file-excel"></i> Import Excel</a></li>
+                <li><a href="{% url 'skaner' %}"><i class="fa-solid fa-qrcode"></i> Skano me QR</a></li>
+            </ul>
+        </div>
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Dil nga Sistemi</button>
+        </form>
+    </aside>
+
+    <main class="main-content">
+        <div class="topbar">
+            <div>
+                <div class="eyebrow">Paneli i inventarit</div>
+                <h1>Produktet</h1>
+                <p class="subtitle">Kerko, filtro dhe rendit artikujt sipas stokut, cmimit, statusit ose skadences.</p>
+            </div>
+            <a href="{% url 'shto_produkt' %}" class="btn-action"><i class="fa-solid fa-plus"></i> Shto Artikull</a>
+        </div>
+
+        <form method="get" class="toolbar">
+            <div class="filter-header"><i class="fa-solid fa-filter"></i> FILTERS & SORTING</div>
+            <div class="filter-grid">
+                <div>
+                    <label class="field-label" for="q">KERKO</label>
+                    <input class="control" id="q" type="search" name="q" value="{{ query }}" placeholder="Produkt, Furnitor Ose Pershkrim">
+                </div>
+                <div>
+                    <label class="field-label" for="njesia">NJESIA</label>
+                    <select class="control" id="njesia" name="njesia">
+                        <option value="">Te Gjitha</option>
+                        {% for value, label in njesia_choices %}
+                            <option value="{{ value }}" {% if filter_values.njesia == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label class="field-label" for="statusi">STATUSI</label>
+                    <select class="control" id="statusi" name="statusi">
+                        <option value="">Te Gjitha</option>
+                        <option value="oferte" {% if filter_values.statusi == "oferte" %}selected{% endif %}>Ne Oferte</option>
+                        <option value="stok_ulet" {% if filter_values.statusi == "stok_ulet" %}selected{% endif %}>Stok I Ulet</option>
+                        <option value="skadon_shpejt" {% if filter_values.statusi == "skadon_shpejt" %}selected{% endif %}>Skadon Shpejt</option>
+                        <option value="skaduar" {% if filter_values.statusi == "skaduar" %}selected{% endif %}>Skaduar</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="field-label" for="sort">RENDIT SIPAS</label>
+                    <select class="control" id="sort" name="sort">
+                        {% for value, option in sort_options.items %}
+                            <option value="{{ value }}" {% if filter_values.sort == value %}selected{% endif %}>{{ option.0 }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button class="btn-filter" type="submit"><i class="fa-solid fa-filter"></i> Apliko</button>
+                <a class="btn-reset" href="{% url 'home' %}"><i class="fa-solid fa-rotate-left"></i> Pastro</a>
+            </div>
+        </form>
+
+        <section class="table-panel">
+            <div class="panel-meta">
+                <span class="metric"><i class="fa-solid fa-layer-group"></i> {{ result_count }} produkte</span>
+                <span class="metric"><i class="fa-solid fa-arrow-down-wide-short"></i> {{ sort_label }}</span>
+            </div>
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Produkti</th>
+                            <th>Furnitori</th>
+                            <th>Stoku</th>
+                            <th>Hyrje / Dalje</th>
+                            <th>Cmimi blerjes</th>
+                            <th>Cmimi shitjes</th>
+                            <th>Statusi</th>
+                            <th class="text-center">QR</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in produkte %}
+                            <tr>
+                                <td>
+                                    <div class="product-name">{{ p.emri }}</div>
+                                    <div class="text-muted small">{{ p.pershkrimi|default:"Pa pershkrim"|truncatewords:8 }}</div>
+                                    <div class="row-actions">
+                                        <a href="{% url 'dashboard_produkti' p.id %}"><i class="fa-solid fa-chart-pie me-1"></i>Analitike</a>
+                                        <a class="edit" href="{% url 'modifiko_produktin' p.id %}"><i class="fa-solid fa-pen me-1"></i>Modifiko</a>
+                                        <a href="{% url 'menaxho_produktin' p.id %}"><i class="fa-solid fa-sliders me-1"></i>Stoku</a>
+                                    </div>
+                                </td>
+                                <td>{{ p.furnitori|default:"-" }}</td>
+                                <td>
+                                    <span class="chip {% if p.sasia < p.stoku_minimal %}chip-low{% else %}chip-stock{% endif %}">
+                                        {{ p.sasia|sasi_format:p.njesia_matese }} {{ p.njesia_matese }}
+                                    </span>
+                                </td>
+                                <td class="small text-muted">
+                                    <div><i class="fa-solid fa-arrow-down-long text-success me-1"></i>{{ p.data_hyrjes|default:"-" }}</div>
+                                    <div class="mt-1"><i class="fa-solid fa-arrow-up-long text-danger me-1"></i>{{ p.data_daljes|default:"-" }}</div>
+                                </td>
+                                <td class="fw-bold">{{ p.cmimi_blerjes|floatformat:2 }} {{ p.monedha }}</td>
+                                <td>
+                                    {% if p.ne_oferte and p.cmimi_ofertes %}
+                                        <div class="price-muted">{{ p.cmimi_shitjes|floatformat:2 }} {{ p.monedha }}</div>
+                                        <div class="price-main text-success">{{ p.cmimi_ofertes|floatformat:2 }} {{ p.monedha }}</div>
+                                    {% else %}
+                                        <div class="price-main">{{ p.cmimi_shitjes|floatformat:2 }} {{ p.monedha }}</div>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="d-flex gap-2 flex-wrap">
+                                        {% if p.ne_oferte %}<span class="chip chip-offer">Oferte</span>{% endif %}
+                                        {% if p.sasia < p.stoku_minimal %}<span class="chip chip-low">Stok i ulet</span>{% endif %}
+                                        {% if p.data_skadences %}
+                                            <span class="chip {% if p.data_skadences < today %}chip-low{% else %}chip-expiry{% endif %}">
+                                                {{ p.data_skadences }}
+                                            </span>
+                                        {% else %}
+                                            <span class="chip chip-neutral">Pa skadence</span>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    {% if p.qr_code %}
+                                        <img src="{{ p.qr_code.url }}" class="qr-img" alt="QR {{ p.emri }}" data-bs-toggle="modal" data-bs-target="#qrModal" onclick="shfaqQR('{{ p.qr_code.url }}', '{{ p.emri|escapejs }}')">
+                                    {% else %}
+                                        <span class="text-muted small">Mungon</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="8" class="empty-state">Nuk u gjet asnje produkt me filtrat aktuale.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</div>
+
+<div class="modal fade" id="qrModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 8px; border: 0; box-shadow: 0 22px 60px rgba(15,23,42,.18);">
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold" id="qrModalLabel">Kodi QR</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Mbyll"></button>
+            </div>
+            <div class="modal-body text-center pt-0 pb-4">
+                <div id="qr-export-area" class="d-inline-block p-3 bg-white border rounded-2">
+                    <img id="modalQrImazhi" src="" style="width: 260px; height: 260px;" alt="QR Zmadhuar">
+                    <h4 class="fw-bold mt-3 mb-0" id="modalQrEmri">Produkti</h4>
+                </div>
+                <div class="mt-3">
+                    <button onclick="shkarkoKodinQR_PNG()" class="btn btn-primary fw-bold"><i class="fa-solid fa-download me-2"></i>Shkarko PNG</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    let linkuAktualQR = "";
+    let emriAktualProduktit = "Kodi_QR";
+
+    function shfaqQR(url, emri) {
+        document.getElementById('modalQrImazhi').src = url;
+        document.getElementById('modalQrEmri').innerText = emri;
+        linkuAktualQR = url;
+        emriAktualProduktit = emri.replace(/\s+/g, '_');
+    }
+
+    async function shkarkoKodinQR_PNG() {
+        if (!linkuAktualQR) return;
+        const response = await fetch(linkuAktualQR);
+        const blob = await response.blob();
+        const objectUrl = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = objectUrl;
+        link.download = 'QR_' + emriAktualProduktit + '.png';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(objectUrl);
+    }
+</script>
+</body>
+</html>

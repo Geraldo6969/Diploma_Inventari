@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>E-Inventory — Dashboard Produkti</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        /* Efekt Transparence Luksoze (Glassmorphism) */
+.content-card {
+    background: rgba(255, 255, 255, 0.85) !important;
+    backdrop-filter: blur(12px) !important; /* Kjo zbut elementet që kalojnë pas kartës */
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: 1px solid rgba(241, 245, 249, 0.8) !important;
+    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.04) !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+.content-card:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 30px 60px rgba(15, 23, 42, 0.08) !important;
+}
+        :root { 
+            --primary: #7c3aed; 
+            --primary-hover: #6d28d9;
+            --danger: #dc2626;
+            --dark-bg: #07172f; 
+            --sidebar-bg: #07172f; 
+            --light-bg: #f2f5fb;
+            --border-color: #d8deea;
+        }
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background:
+                linear-gradient(120deg, rgba(11, 31, 63, 0.13), transparent 34%),
+                linear-gradient(220deg, rgba(124, 58, 237, 0.12), transparent 30%),
+                linear-gradient(35deg, rgba(220, 38, 38, 0.08), transparent 24%),
+                var(--light-bg);
+            color: #101827;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+        
+        /* Sidebar Layout */
+        .sidebar { width: 260px; height: 100vh; background: var(--sidebar-bg); position: fixed; top: 0; left: 0; color: white; padding: 28px 24px; display: flex; flex-direction: column; justify-content: space-between; z-index: 1000; }
+        .brand { font-size: 22px; font-weight: 800; color: #ddd6fe; display: flex; align-items: center; gap: 12px; margin-bottom: 40px; }
+        .sidebar-menu { list-style: none; padding: 0; margin: 0; }
+        .sidebar-menu li { margin-bottom: 8px; }
+        .sidebar-menu a { color: #94a3b8; text-decoration: none; padding: 12px 16px; border-radius: 10px; display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 14px; transition: all 0.25s ease; }
+        .sidebar-menu a:hover, .sidebar-menu a.active { background: rgba(124, 58, 237, 0.2); color: #ffffff; }
+        
+        /* Main Layout */
+        .main-content { margin-left: 260px; padding: 44px; width: calc(100% - 260px); min-height: 100vh; box-sizing: border-box; }
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 36px; }
+        .page-title h1 { font-size: 28px; font-weight: 800; color: var(--dark-bg); margin: 0; letter-spacing: 0; }
+        
+        /* Kartat e Metrikave */
+        .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; margin-bottom: 36px; }
+        .metric-card { background: white; border: 1px solid var(--border-color); border-radius: 8px; padding: 24px; box-shadow: 0 18px 38px rgba(15, 23, 42, 0.06); transition: all 0.2s ease; }
+        .metric-card:hover { transform: translateY(-4px); box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06); }
+        .metric-card span { font-size: 12px; font-weight: 800; color: var(--dark-bg); text-transform: uppercase; letter-spacing: 0.06em; }
+        .metric-card h3 { font-size: 24px; font-weight: 800; color: #101827; margin-top: 8px; margin-bottom: 0; letter-spacing: 0; }
+        
+        .chart-card { background: white; border-radius: 8px; box-shadow: 0 18px 38px rgba(15, 23, 42, 0.06); border: 1px solid var(--border-color); padding: 28px; margin-bottom: 30px; }
+        .badge-alert { background: #fee2e2; color: var(--danger); padding: 6px 12px; border-radius: 8px; font-size: 13px; font-weight: 800; }
+        .badge-ok { background: #ede9fe; color: var(--primary); padding: 6px 12px; border-radius: 8px; font-size: 13px; font-weight: 800; }
+        
+        .btn-back { color: #64748b; text-decoration: none; font-weight: 600; font-size: 14px; padding: 10px 16px; border-radius: 8px; border: 1px solid var(--border-color); background: white; transition: all 0.2s; }
+        .btn-back:hover { background: #f6f3ff; color: var(--primary); }
+        .logout-btn { background: none; border: none; color: #fecaca; width: 100%; text-align: left; padding: 12px 16px; display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 14px; cursor: pointer; }
+        .logout-btn:hover { color: #ffffff; background: rgba(220, 38, 38, 0.16); }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div>
+            <div class="brand"><i class="fa-solid fa-cubes"></i> E-Inventory</div>
+            <ul class="sidebar-menu">
+                <li><a href="{% url 'home' %}" class="active"><i class="fa-solid fa-boxes-stacked"></i> Produktet</a></li>
+                <li><a href="{% url 'shto_produkt' %}"><i class="fa-solid fa-plus"></i> Shto Produkt</a></li>
+                <li><a href="{% url 'raportet' %}"><i class="fa-solid fa-chart-line"></i> Raportet</a></li>
+                <li><a href="{% url 'importo_excel' %}"><i class="fa-solid fa-file-excel"></i> Import Excel</a></li>
+                <li><a href="{% url 'skaner' %}"><i class="fa-solid fa-qrcode"></i> Skano me QR</a></li>
+            </ul>
+        </div>
+        <div>
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Dil nga Sistemi</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="page-header">
+            <div class="page-title">
+                <h1>📊 Analitikë: {{ produkti.emri }}</h1>
+                <p class="text-muted mb-0">Monitorimi granular i ecurisë, stokut dhe parashikimeve për këtë artikull.</p>
+            </div>
+            <div>
+                <a href="{% url 'home' %}" class="btn-back"><i class="fa-solid fa-arrow-left me-2"></i>Kthehu te Lista</a>
+            </div>
+        </div>
+
+        <div class="metric-grid">
+            <div class="metric-card border-start border-primary border-4">
+                <span>📦 Stoku Aktual</span>
+                <h3>{{ produkti.sasia|floatformat:2 }} <small style="font-size: 12px;">{{ produkti.njesia_matese }}</small></h3>
+            </div>
+            <div class="metric-card border-start border-secondary border-4">
+                <span>⚠️ Kufiri Minimal</span>
+                <h3>{{ produkti.stoku_minimal|floatformat:2 }} <small style="font-size: 12px;">{{ produkti.njesia_matese }}</small></h3>
+            </div>
+            <div class="metric-card border-start border-success border-4">
+                <span>💰 Çmimi Shitjes</span>
+                <h3>{{ produkti.cmimi_shitjes|floatformat:2 }} {{ produkti.monedha }}</h3>
+            </div>
+            <div class="metric-card border-start {% if produkti.sasia <= produkti.stoku_minimal %}border-danger{% else %}border-success{% endif %} border-4">
+                <span>🚨 Statusi i Stokut</span>
+                <div class="mt-2">
+                    {% if produkti.sasia <= produkti.stoku_minimal %}
+                        <span class="badge-alert"><i class="fa-solid fa-triangle-exclamation me-1"></i> Nën Limit / Alarmi</span>
+                    {% else %}
+                        <span class="badge-ok"><i class="fa-solid fa-circle-check me-1"></i> Stoku në Rregull</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="chart-card">
+                    <h3 class="h5 fw-bold text-dark mb-4"><i class="fa-solid fa-chart-line text-muted me-2"></i>Ecuria e Shitjeve dhe Lëvizjeve</h3>
+                    
+                    <div style="position: relative; height: 320px; width: 100%;">
+                        <canvas id="grafikuImMePika"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="chart-card" style="height: calc(100% - 30px);">
+                    <h3 class="h5 fw-bold text-dark mb-4"><i class="fa-solid fa-wand-magic-sparkles text-muted me-2"></i>Parashikimi i Stokut</h3>
+                    
+                    <div class="p-3 border rounded-3 bg-light mb-3">
+                        <span class="text-muted d-block small fw-bold text-uppercase">Ditë të mbetura (Udhëzues)</span>
+                        <h4 class="fw-bold text-dark mt-1 mb-0">
+                            {% if dite_mbetura %}
+                                {{ dite_mbetura }} Ditë
+                            {% else %}
+                                N/A <small class="text-muted font-monospace" style="font-size: 11px;">(Pa lëvizje)</small>
+                            {% endif %}
+                        </h4>
+                        <p class="text-muted small mb-0 mt-2">Koha e vlerësuar para se stoku të preki vlerën 0.</p>
+                    </div>
+
+                    <div class="p-3 border rounded-3 bg-light">
+                        <span class="text-muted d-block small fw-bold text-uppercase">Furnitori Zyrtar</span>
+                        <div class="fw-bold text-dark mt-2" style="font-size: 14px;">
+                            <i class="fa-regular fa-building text-primary me-2"></i>{{ produkti.furnitori|default:"Pa Furnitor" }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const ctx = document.getElementById('grafikuImMePika').getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    // Renditja e akseve X sipas historikut (nëse ka lëvizje, printohen datat e tyre, përndryshe del etiketë standarde)
+                    labels: [
+                        {% for levizje in levizjet %}
+                            "{{ levizje.data_regjistrimit|date:'d M' }}",
+                        {% empty %}
+                            "Gjendja Aktuale"
+                        {% endfor %}
+                    ],
+                    datasets: [{
+                        label: 'Sasia e Artikullit',
+                        
+                        // LOGJIKA E SAKTË: Nëse ka të dhëna në databazë, merr ato. Përndryshe merr vetëm sasinë e sotme
+                        data: [
+                            {% for levizje in levizjet %}
+                                parseFloat("{{ levizje.sasia }}"),
+                            {% empty %}
+                                parseFloat("{{ produkti.sasia }}")
+                            {% endfor %}
+                        ],
+                        
+                        borderColor: '#7c3aed', 
+                        backgroundColor: 'rgba(124, 58, 237, 0.08)', 
+                        borderWidth: 3,
+                        pointBackgroundColor: '#dc2626',
+                        pointRadius: 6,
+                        pointHoverRadius: 8,
+                        tension: 0.25 
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: '#f1f5f9' },
+                            ticks: {
+                                font: { family: 'Plus Jakarta Sans' }
+                            }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: {
+                                font: { family: 'Plus Jakarta Sans', weight: '600' }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

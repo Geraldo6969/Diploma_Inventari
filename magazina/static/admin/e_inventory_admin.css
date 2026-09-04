@@ -1,0 +1,433 @@
+:root {
+    --ei-navy: #07172f;
+    --ei-navy-2: #0b1f3f;
+    --ei-purple: #7c3aed;
+    --ei-purple-dark: #5b21b6;
+    --ei-red: #dc2626;
+    --ei-red-dark: #991b1b;
+    --ei-page: #f2f5fb;
+    --ei-line: #d8deea;
+    --ei-text: #101827;
+    --ei-muted: #6b7280;
+}
+
+body,
+.content-wrapper {
+    background:
+        linear-gradient(120deg, rgba(11, 31, 63, 0.16), transparent 34%),
+        linear-gradient(220deg, rgba(124, 58, 237, 0.14), transparent 30%),
+        linear-gradient(35deg, rgba(220, 38, 38, 0.10), transparent 24%),
+        var(--ei-page) !important;
+    color: var(--ei-text) !important;
+}
+
+.main-header.navbar,
+.main-header,
+.navbar-white {
+    background: var(--ei-navy) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, .08) !important;
+    box-shadow: 0 14px 30px rgba(7, 23, 47, .22) !important;
+}
+
+.main-header .nav-link,
+.main-header .navbar-nav .nav-link,
+.main-header .navbar-brand,
+.brand-link,
+.brand-text {
+    color: #ddd6fe !important;
+    font-weight: 800 !important;
+}
+
+.brand-text,
+.main-header .navbar-brand {
+    letter-spacing: .03em !important;
+    text-transform: uppercase !important;
+}
+
+.main-sidebar,
+.main-sidebar::before,
+.sidebar-dark-primary {
+    background: var(--ei-navy) !important;
+}
+
+.brand-link {
+    background: var(--ei-navy-2) !important;
+    border-bottom: 1px solid rgba(255,255,255,.08) !important;
+}
+
+.sidebar .nav-sidebar > .nav-item > .nav-link {
+    border-radius: 8px !important;
+    color: #c7d2fe !important;
+    font-weight: 700 !important;
+    margin: 3px 10px !important;
+}
+
+.sidebar .nav-sidebar > .nav-item > .nav-link:hover,
+.sidebar .nav-sidebar > .nav-item > .nav-link.active,
+.sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active {
+    background: linear-gradient(135deg, var(--ei-purple), var(--ei-purple-dark)) !important;
+    color: #fff !important;
+    box-shadow: 0 10px 22px rgba(124, 58, 237, .24) !important;
+}
+
+.content-header h1,
+.content h1,
+h1 {
+    color: var(--ei-navy) !important;
+    font-weight: 800 !important;
+    letter-spacing: 0 !important;
+}
+
+.breadcrumb,
+.breadcrumb-item a {
+    color: var(--ei-purple) !important;
+    font-weight: 700 !important;
+}
+
+.card,
+#changelist,
+.module,
+.inline-group,
+.submit-row,
+.results,
+#changelist-filter {
+    border: 1px solid var(--ei-line) !important;
+    border-radius: 8px !important;
+    box-shadow: 0 18px 38px rgba(15, 23, 42, .07) !important;
+    overflow: hidden !important;
+}
+
+.card-header,
+.module h2,
+.module caption,
+.inline-group h2 {
+    background: #f6f3ff !important;
+    color: var(--ei-navy) !important;
+    border-bottom: 1px solid var(--ei-line) !important;
+    font-weight: 800 !important;
+}
+
+.btn-primary,
+.button,
+input[type=submit],
+input[type=button],
+.submit-row input,
+a.button,
+.object-tools a,
+.btn-success {
+    background: linear-gradient(135deg, var(--ei-purple), var(--ei-purple-dark)) !important;
+    border-color: var(--ei-purple) !important;
+    color: #fff !important;
+    border-radius: 8px !important;
+    font-weight: 800 !important;
+    box-shadow: 0 8px 18px rgba(124, 58, 237, .22) !important;
+}
+
+.btn-danger,
+.deletelink,
+.deletelink-box a {
+    background: linear-gradient(135deg, var(--ei-red), var(--ei-red-dark)) !important;
+    border-color: var(--ei-red) !important;
+    color: #fff !important;
+    border-radius: 8px !important;
+    font-weight: 800 !important;
+}
+
+a,
+.page-link {
+    color: var(--ei-purple) !important;
+}
+
+a:hover,
+.page-link:hover {
+    color: var(--ei-red) !important;
+}
+
+input[type=text],
+input[type=number],
+input[type=email],
+input[type=password],
+input[type=url],
+select,
+textarea,
+.form-control,
+.select2-container--default .select2-selection--single {
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 8px !important;
+    background: #fff !important;
+    color: var(--ei-text) !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+.form-control:focus,
+.select2-container--default.select2-container--focus .select2-selection--single {
+    border-color: var(--ei-purple) !important;
+    box-shadow: 0 0 0 4px rgba(124, 58, 237, .14) !important;
+    outline: 0 !important;
+}
+
+#changelist-search,
+#toolbar {
+    background: #fff !important;
+    border: 1px solid var(--ei-line) !important;
+    border-radius: 8px !important;
+    box-shadow: 0 14px 28px rgba(15, 23, 42, .05) !important;
+    padding: 12px !important;
+}
+
+#changelist table,
+.results table,
+table.table {
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    background: #fff !important;
+}
+
+#changelist table thead th,
+.results table thead th,
+table.table thead th {
+    background: #f6f3ff !important;
+    color: var(--ei-navy) !important;
+    border-bottom: 1px solid var(--ei-line) !important;
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    letter-spacing: .06em !important;
+    text-transform: uppercase !important;
+    padding: 13px 12px !important;
+    white-space: nowrap !important;
+}
+
+#changelist table thead th.sortable a,
+#changelist table thead th.sorted a,
+.results table thead th.sortable a,
+.results table thead th.sorted a {
+    color: var(--ei-navy) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 7px !important;
+    text-decoration: none !important;
+}
+
+#changelist table thead th.sortable a::after,
+.results table thead th.sortable a::after {
+    content: "SORT";
+    border: 1px solid #c4b5fd;
+    background: #ede9fe;
+    color: var(--ei-purple);
+    border-radius: 999px;
+    padding: 2px 7px;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .04em;
+}
+
+#changelist table thead th.sorted,
+.results table thead th.sorted {
+    background: #ede9fe !important;
+    box-shadow: inset 0 -3px 0 var(--ei-purple) !important;
+}
+
+#changelist table thead th.sorted a::after,
+.results table thead th.sorted a::after {
+    content: "ACTIVE";
+    border: 1px solid var(--ei-purple);
+    background: var(--ei-purple);
+    color: #fff;
+    border-radius: 999px;
+    padding: 2px 7px;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .04em;
+}
+
+#changelist table tbody tr,
+.results table tbody tr {
+    transition: background .16s ease !important;
+}
+
+#changelist table tbody tr:hover,
+.results table tbody tr:hover,
+table.table tbody tr:hover {
+    background: #faf7ff !important;
+}
+
+#changelist table tbody td,
+#changelist table tbody th,
+.results table tbody td,
+.results table tbody th {
+    border-bottom: 1px solid #edf0f6 !important;
+    padding: 12px !important;
+    vertical-align: middle !important;
+}
+
+#changelist table tbody th a,
+.results table tbody th a {
+    color: var(--ei-navy) !important;
+    font-weight: 800 !important;
+    text-decoration: none !important;
+}
+
+#changelist table tbody th a:hover,
+.results table tbody th a:hover {
+    color: var(--ei-purple) !important;
+}
+
+#changelist-filter {
+    background: rgba(255,255,255,.96) !important;
+    border-left: 1px solid var(--ei-line) !important;
+    padding-top: 10px !important;
+}
+
+#changelist-filter h2,
+#changelist-filter h3,
+.card-title {
+    color: var(--ei-navy) !important;
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    letter-spacing: .06em !important;
+}
+
+#changelist-filter h2 {
+    display: flex !important;
+    align-items: center !important;
+    min-height: 44px !important;
+    margin: 0 12px 12px !important;
+    padding: 0 12px !important;
+    border-radius: 8px !important;
+    background: linear-gradient(135deg, var(--ei-navy), var(--ei-purple-dark)) !important;
+    color: #fff !important;
+    box-shadow: 0 10px 22px rgba(7, 23, 47, .14) !important;
+}
+
+#changelist-filter h2::before {
+    content: "◈";
+    margin-right: 8px;
+    color: #fecaca;
+}
+
+#changelist-filter h3 {
+    position: relative !important;
+    margin: 14px 12px 7px !important;
+    padding: 9px 10px 9px 14px !important;
+    border-radius: 8px !important;
+    background: #f6f3ff !important;
+    border: 1px solid #ddd6fe !important;
+    font-size: 11px !important;
+}
+
+#changelist-filter h3::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 7px;
+    bottom: 7px;
+    width: 4px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, var(--ei-purple), var(--ei-red));
+}
+
+#changelist-filter ul {
+    padding: 0 12px 12px !important;
+    border-bottom: 1px solid #edf0f6 !important;
+}
+
+#changelist-filter li {
+    margin: 5px 0 !important;
+}
+
+#changelist-filter li a {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+    border-radius: 8px !important;
+    padding: 7px 10px !important;
+    color: #4b5563 !important;
+    font-weight: 700 !important;
+    text-decoration: none !important;
+    border: 1px solid transparent !important;
+    transition: background .16s ease, border-color .16s ease, color .16s ease !important;
+}
+
+#changelist-filter li a::after {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: #cbd5e1;
+    flex: 0 0 auto;
+}
+
+#changelist-filter li.selected a,
+#changelist-filter li a:hover {
+    background: #ede9fe !important;
+    border-color: #c4b5fd !important;
+    color: var(--ei-purple) !important;
+}
+
+#changelist-filter li.selected a::after,
+#changelist-filter li a:hover::after {
+    background: var(--ei-red);
+    box-shadow: 0 0 0 4px rgba(220, 38, 38, .12);
+}
+
+.datetimeshortcuts a,
+.date-icon,
+.clock-icon {
+    color: var(--ei-purple) !important;
+    font-weight: 800 !important;
+}
+
+.calendarbox,
+.clockbox {
+    border: 1px solid var(--ei-line) !important;
+    border-radius: 8px !important;
+    box-shadow: 0 18px 38px rgba(15, 23, 42, .12) !important;
+    overflow: hidden !important;
+}
+
+.calendarbox caption,
+.clockbox h2 {
+    background: linear-gradient(135deg, var(--ei-navy), var(--ei-purple-dark)) !important;
+    color: #fff !important;
+    font-weight: 800 !important;
+}
+
+.calendar td.selected a,
+.calendar td a:hover {
+    background: var(--ei-purple) !important;
+    color: #fff !important;
+}
+
+.ei-user-pill,
+.ei-soft-pill,
+.ei-currency-pill,
+.ei-stock-pill,
+.ei-offer-pill,
+.ei-muted-pill,
+.ei-date-pill,
+.ei-date-danger {
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+    padding: 4px 9px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.ei-user-pill { background: #f6f3ff; color: var(--ei-navy); border: 1px solid #ddd6fe; }
+.ei-soft-pill { background: #f6f3ff; color: var(--ei-purple); }
+.ei-currency-pill { background: var(--ei-navy); color: #fff; }
+.ei-stock-ok { background: #ede9fe; color: var(--ei-purple); }
+.ei-stock-low { background: #fee2e2; color: var(--ei-red); }
+.ei-offer-pill { background: linear-gradient(135deg, var(--ei-purple), var(--ei-purple-dark)); color: #fff; }
+.ei-muted-pill { background: #eef2f7; color: var(--ei-muted); }
+.ei-date-pill { background: #f6f3ff; color: var(--ei-navy); }
+.ei-date-danger { background: #fff1f2; color: var(--ei-red); border: 1px solid #fecaca; }
+.ei-price-buy { color: var(--ei-navy); font-weight: 800; }
+.ei-price-sell { color: var(--ei-purple); font-weight: 800; }
+.ei-old-price { color: #9ca3af; font-size: 11px; font-weight: 800; text-decoration: line-through; }

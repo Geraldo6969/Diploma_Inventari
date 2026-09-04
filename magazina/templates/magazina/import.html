@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>E-Inventory — Import Excel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Efekt Transparence Luksoze (Glassmorphism) */
+.content-card {
+    background: rgba(255, 255, 255, 0.85) !important;
+    backdrop-filter: blur(12px) !important; /* Kjo zbut elementet që kalojnë pas kartës */
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: 1px solid rgba(241, 245, 249, 0.8) !important;
+    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.04) !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+.content-card:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 30px 60px rgba(15, 23, 42, 0.08) !important;
+}
+        :root { --primary: #7c3aed; --primary-hover: #6d28d9; --danger: #dc2626; --sidebar-bg: #07172f; --light-bg: #f2f5fb; --border-color: #d8deea; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background:
+                linear-gradient(120deg, rgba(11, 31, 63, 0.13), transparent 34%),
+                linear-gradient(220deg, rgba(124, 58, 237, 0.12), transparent 30%),
+                linear-gradient(35deg, rgba(220, 38, 38, 0.08), transparent 24%),
+                var(--light-bg);
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+        
+        .sidebar { width: 260px; height: 100vh; background: var(--sidebar-bg); position: fixed; top: 0; left: 0; color: white; padding: 28px 24px; display: flex; flex-direction: column; justify-content: space-between; z-index: 1000; }
+        .brand { font-size: 22px; font-weight: 800; color: #ddd6fe; display: flex; align-items: center; gap: 12px; margin-bottom: 40px; }
+        .sidebar-menu { list-style: none; padding: 0; margin: 0; }
+        .sidebar-menu li { margin-bottom: 8px; }
+        .sidebar-menu a { color: #94a3b8; text-decoration: none; padding: 12px 16px; border-radius: 10px; display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 14px; transition: all 0.2s; }
+        .sidebar-menu a:hover, .sidebar-menu a.active { background: rgba(124, 58, 237, 0.2); color: #ffffff; }
+        
+        .main-content { margin-left: 260px; width: calc(100% - 260px); padding: 44px; min-height: 100vh; box-sizing: border-box; }
+        .content-card { background: white; border-radius: 8px; box-shadow: 0 18px 38px rgba(15, 23, 42, 0.06); border: 1px solid var(--border-color); padding: 40px; max-width: 650px; margin: 40px auto; text-align: center; }
+        
+        /* Zona e Ngarkimit */
+        .upload-area { border: 2px dashed #c4b5fd; padding: 40px 20px; border-radius: 8px; background: #f6f3ff; cursor: pointer; transition: all 0.2s ease; margin-bottom: 24px; }
+        .upload-area:hover { border-color: var(--danger); background: #fff5f5; }
+        .upload-area i { font-size: 48px; color: var(--primary); margin-bottom: 16px; }
+        
+        input[type="file"] { display: none; }
+        
+        .btn-import { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%); color: white; font-weight: 800; padding: 12px 32px; border-radius: 8px; border: none; box-shadow: 0 8px 18px rgba(124, 58, 237, 0.2); width: 100%; transition: all 0.2s; }
+        .btn-import:hover { transform: translateY(-1px); box-shadow: 0 10px 22px rgba(124, 58, 237, 0.28); }
+        .logout-btn { background: none; border: none; color: #fecaca; width: 100%; text-align: left; padding: 12px 16px; display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 14px; cursor: pointer; }
+        .logout-btn:hover { color: #ffffff; background: rgba(220, 38, 38, 0.16); }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div>
+            <div class="brand"><i class="fa-solid fa-cubes"></i> E-Inventory</div>
+            <ul class="sidebar-menu">
+                <li><a href="{% url 'home' %}"><i class="fa-solid fa-boxes-stacked"></i> Produktet</a></li>
+                <li><a href="{% url 'shto_produkt' %}"><i class="fa-solid fa-plus"></i> Shto Produkt</a></li>
+                <li><a href="{% url 'raportet' %}"><i class="fa-solid fa-chart-line"></i> Raportet</a></li>
+                <li><a href="{% url 'importo_excel' %}" class="active"><i class="fa-solid fa-file-excel"></i> Import Excel</a></li>
+                <li><a href="{% url 'skaner' %}"><i class="fa-solid fa-qrcode"></i> Skano me QR</a></li>
+            </ul>
+        </div>
+        <div>
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Dil nga Sistemi</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="content-card">
+            <h2 class="fw-bold text-dark mb-2" style="letter-spacing: -0.5px;">📊 Importo të Dhëna nga Excel</h2>
+            <p class="text-muted small mb-4">Ngarkoni një skedar `.xlsx` ose `.xls` për të shtuar automatikisht artikujt në masë.</p>
+            
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <label class="upload-area" for="id_skedar_excel">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <h5 class="fw-bold text-dark mb-1" id="file-label-text">Zgjidhni skedarin Excel</h5>
+                    <p class="text-muted small mb-0">Klikoni për të shfletuar dokumentet e kompjuterit</p>
+                    <input type="file" name="excel_file" id="id_skedar_excel" accept=".xlsx, .xls" required onchange="shfaqEmrin(this)">
+                </label>
+
+                <button type="submit" class="btn-import"><i class="fa-solid fa-file-import me-2"></i> Nis Importimin</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function shfaqEmrin(input) {
+            if (input.files && input.files[0]) {
+                document.getElementById('file-label-text').innerText = input.files[0].name;
+            }
+        }
+    </script>
+</body>
+</html>

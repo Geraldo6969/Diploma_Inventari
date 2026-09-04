@@ -1,0 +1,289 @@
+{% extends "admin/base.html" %}
+
+{% block title %}E Inventory{% endblock %}
+
+{% block branding %}
+<div id="site-name">
+    <a href="{% url 'admin:index' %}">E Inventory</a>
+</div>
+{% endblock %}
+
+{% block extrastyle %}{{ block.super }}
+<style>
+    :root {
+        --ei-ink: #101827;
+        --ei-muted: #6b7280;
+        --ei-line: #d8deea;
+        --ei-navy: #07172f;
+        --ei-purple: #7c3aed;
+        --ei-red: #dc2626;
+        --ei-nav: #07172f;
+        --primary: #7c3aed;
+        --secondary: #dc2626;
+        --accent: #7c3aed;
+        --primary-fg: #ffffff;
+        --body-bg: #eef3f8;
+        --body-fg: #111827;
+        --header-bg: #07172f;
+        --header-color: #ffffff;
+        --breadcrumbs-bg: #ffffff;
+        --breadcrumbs-fg: #64748b;
+        --link-fg: #6d28d9;
+        --link-hover-color: #dc2626;
+    }
+
+    body {
+        background:
+            linear-gradient(120deg, rgba(11, 31, 63, 0.13), transparent 34%),
+            linear-gradient(220deg, rgba(124, 58, 237, 0.12), transparent 30%),
+            linear-gradient(35deg, rgba(220, 38, 38, 0.08), transparent 24%),
+            #f2f5fb !important;
+        color: var(--ei-ink) !important;
+    }
+
+    #header {
+        min-height: 62px;
+        background: var(--ei-nav) !important;
+        border-bottom: 1px solid rgba(255,255,255,.08);
+        box-shadow: 0 14px 30px rgba(15, 23, 42, .18);
+    }
+
+    #branding #site-name a {
+        color: #ddd6fe !important;
+        font-weight: 800;
+        letter-spacing: 0;
+    }
+
+    div.breadcrumbs {
+        background: rgba(255,255,255,.9) !important;
+        color: var(--ei-muted) !important;
+        border-bottom: 1px solid var(--ei-line);
+    }
+
+    #content-main .module,
+    .change-list .filtered #changelist,
+    #changelist,
+    .inline-group,
+    .submit-row {
+        border: 1px solid var(--ei-line) !important;
+        border-radius: 8px !important;
+        box-shadow: 0 18px 38px rgba(15, 23, 42, .06);
+        overflow: hidden;
+    }
+
+    .module h2,
+    .module caption,
+    .inline-group h2 {
+        background: #f6f3ff !important;
+        color: var(--ei-ink) !important;
+        font-weight: 800 !important;
+        border-bottom: 1px solid var(--ei-line);
+    }
+
+    #changelist-filter h2,
+    #changelist-filter h3 {
+        color: var(--ei-ink) !important;
+        font-weight: 800 !important;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+    }
+
+    #content h1 {
+        color: var(--ei-navy) !important;
+        font-weight: 800 !important;
+        letter-spacing: 0 !important;
+    }
+
+    #changelist {
+        background: rgba(255,255,255,.94) !important;
+    }
+
+    #changelist table {
+        border-collapse: separate !important;
+        border-spacing: 0 !important;
+    }
+
+    #changelist table thead th {
+        background: #f6f3ff !important;
+        border-bottom: 1px solid var(--ei-line) !important;
+        color: var(--ei-navy) !important;
+        font-size: 11px !important;
+        font-weight: 800 !important;
+        letter-spacing: .06em !important;
+        text-transform: uppercase !important;
+        padding: 13px 12px !important;
+        white-space: nowrap;
+    }
+
+    #changelist table thead th.sortable a,
+    #changelist table thead th.sorted a {
+        color: var(--ei-navy) !important;
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        text-decoration: none !important;
+    }
+
+    #changelist table thead th.sortable a:after {
+        content: "SORT";
+        border: 1px solid #c4b5fd;
+        background: #ede9fe;
+        color: var(--ei-purple);
+        border-radius: 999px;
+        padding: 2px 7px;
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: .04em;
+    }
+
+    #changelist table thead th.sorted {
+        background: #ede9fe !important;
+        box-shadow: inset 0 -3px 0 var(--ei-purple);
+    }
+
+    #changelist table thead th.sorted a:after {
+        content: "ACTIVE";
+        border: 1px solid var(--ei-purple);
+        background: var(--ei-purple);
+        color: #fff;
+        border-radius: 999px;
+        padding: 2px 7px;
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: .04em;
+    }
+
+    #changelist table tbody tr {
+        transition: background .16s ease, transform .16s ease;
+    }
+
+    #changelist table tbody tr:hover {
+        background: #faf7ff !important;
+    }
+
+    #changelist table tbody td,
+    #changelist table tbody th {
+        border-bottom: 1px solid #edf0f6 !important;
+        padding: 12px !important;
+        vertical-align: middle !important;
+    }
+
+    #changelist table tbody th a {
+        color: var(--ei-navy) !important;
+        font-weight: 800 !important;
+        text-decoration: none !important;
+    }
+
+    #changelist table tbody th a:hover {
+        color: var(--ei-purple) !important;
+    }
+
+    #changelist-filter {
+        background: rgba(255,255,255,.94) !important;
+        border-left: 1px solid var(--ei-line) !important;
+        box-shadow: -12px 0 30px rgba(15, 23, 42, .04);
+    }
+
+    #changelist-filter ul {
+        padding: 0 12px 12px !important;
+    }
+
+    #changelist-filter li {
+        margin: 5px 0 !important;
+    }
+
+    #changelist-filter li a {
+        display: block;
+        border-radius: 8px;
+        padding: 7px 10px !important;
+        color: #4b5563 !important;
+        font-weight: 700;
+        text-decoration: none !important;
+    }
+
+    #changelist-filter li.selected a,
+    #changelist-filter li a:hover {
+        background: #ede9fe !important;
+        color: var(--ei-purple) !important;
+    }
+
+    #toolbar,
+    #changelist-search {
+        background: #fff !important;
+        border: 1px solid var(--ei-line) !important;
+        border-radius: 8px !important;
+        box-shadow: 0 14px 28px rgba(15,23,42,.05);
+    }
+
+    .ei-user-pill,
+    .ei-soft-pill,
+    .ei-currency-pill,
+    .ei-stock-pill,
+    .ei-offer-pill,
+    .ei-muted-pill,
+    .ei-date-pill,
+    .ei-date-danger {
+        display: inline-flex;
+        align-items: center;
+        min-height: 28px;
+        padding: 4px 9px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 800;
+        white-space: nowrap;
+    }
+
+    .ei-user-pill { background: #f6f3ff; color: var(--ei-navy); border: 1px solid #ddd6fe; }
+    .ei-soft-pill { background: #f6f3ff; color: var(--ei-purple); }
+    .ei-currency-pill { background: var(--ei-navy); color: #fff; }
+    .ei-stock-ok { background: #ede9fe; color: var(--ei-purple); }
+    .ei-stock-low { background: #fee2e2; color: var(--ei-red); }
+    .ei-offer-pill { background: linear-gradient(135deg, var(--ei-purple), #6d28d9); color: #fff; }
+    .ei-muted-pill { background: #eef2f7; color: #6b7280; }
+    .ei-date-pill { background: #f6f3ff; color: var(--ei-navy); }
+    .ei-date-danger { background: #fff1f2; color: var(--ei-red); border: 1px solid #fecaca; }
+    .ei-price-buy { color: var(--ei-navy); font-weight: 800; }
+    .ei-price-sell { color: var(--ei-purple); font-weight: 800; }
+    .ei-old-price { color: #9ca3af; font-size: 11px; font-weight: 800; text-decoration: line-through; }
+
+    .button,
+    input[type=submit],
+    input[type=button],
+    .submit-row input,
+    a.button {
+        min-height: 36px;
+        border-radius: 8px !important;
+        border: 1px solid var(--ei-purple) !important;
+        background: var(--ei-purple) !important;
+        color: white !important;
+        font-weight: 800 !important;
+        box-shadow: 0 8px 18px rgba(124, 58, 237, .2);
+    }
+
+    .button:hover,
+    input[type=submit]:hover,
+    a.button:hover {
+        background: #6d28d9 !important;
+    }
+
+    input[type=text],
+    input[type=number],
+    input[type=email],
+    input[type=password],
+    input[type=url],
+    select,
+    textarea {
+        border-radius: 8px !important;
+        border: 1px solid #cbd5e1 !important;
+        background: #fff !important;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+        border-color: var(--ei-purple) !important;
+        box-shadow: 0 0 0 4px rgba(124, 58, 237, .14) !important;
+        outline: 0 !important;
+    }
+</style>
+{% endblock %}

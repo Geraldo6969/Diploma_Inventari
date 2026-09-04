@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+{% load inventory_filters %}
+<html lang="sq">
+<head>
+    <meta charset="UTF-8">
+    <title>Menaxho: {{ produkti.emri }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; }
+        :root {
+            --navy: #07172f;
+            --purple: #7c3aed;
+            --purple-dark: #6d28d9;
+            --red: #dc2626;
+            --line: #d8deea;
+            --page: #f2f5fb;
+        }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            padding: 24px;
+            font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+            color: #101827;
+            background:
+                linear-gradient(120deg, rgba(11, 31, 63, 0.15), transparent 34%),
+                linear-gradient(220deg, rgba(124, 58, 237, 0.14), transparent 30%),
+                linear-gradient(35deg, rgba(220, 38, 38, 0.09), transparent 24%),
+                var(--page);
+        }
+        .card {
+            width: 100%;
+            max-width: 480px;
+            background: #fff;
+            padding: 28px;
+            border-radius: 8px;
+            border: 1px solid var(--line);
+            box-shadow: 0 22px 48px rgba(15, 23, 42, .12);
+        }
+        .header { text-align: center; border-bottom: 1px solid var(--line); padding-bottom: 18px; }
+        h2 { margin: 0; color: var(--navy); font-size: 26px; font-weight: 800; }
+        .supplier { margin: 6px 0 12px; color: #6b7280; font-weight: 700; }
+        .status-badge { display: inline-flex; align-items: center; gap: 7px; padding: 7px 11px; border-radius: 8px; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; }
+        .bg-danger { background: #fee2e2; color: var(--red); }
+        .bg-success { background: #ede9fe; color: var(--purple); }
+        .message { padding: 11px 12px; border-radius: 8px; margin: 14px 0; font-size: 14px; font-weight: 700; }
+        .message.success { background: #ede9fe; color: var(--purple); }
+        .message.error { background: #fee2e2; color: var(--red); }
+        .sasia-display { font-size: 50px; font-weight: 800; text-align: center; margin: 24px 0; color: var(--navy); }
+        .sasia-display small { color: #6b7280; font-size: 17px; }
+        .description { margin: 18px 0; color: #374151; line-height: 1.5; }
+        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .btn { border: none; min-height: 58px; border-radius: 8px; font-size: 18px; font-weight: 800; cursor: pointer; transition: transform .16s ease, box-shadow .16s ease; color: #fff; }
+        .btn-plus { background: linear-gradient(135deg, var(--purple), var(--purple-dark)); box-shadow: 0 10px 22px rgba(124,58,237,.24); }
+        .btn-minus { background: linear-gradient(135deg, var(--red), #991b1b); box-shadow: 0 10px 22px rgba(220,38,38,.2); }
+        .btn:active { transform: scale(.98); }
+        .manual-box { margin-top: 16px; }
+        .manual-box label { display: block; margin-bottom: 7px; color: var(--navy); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; }
+        .manual-box input { width: 100%; min-height: 44px; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-weight: 700; }
+        .manual-box input:focus { border-color: var(--purple); box-shadow: 0 0 0 4px rgba(124,58,237,.14); outline: 0; }
+        .manual-box button { width: 100%; background: var(--navy); color: white; border: none; min-height: 44px; margin-top: 8px; border-radius: 8px; cursor: pointer; font-weight: 800; }
+        .info-row { display: flex; justify-content: space-between; gap: 16px; margin: 11px 0; color: #6b7280; font-weight: 700; }
+        .info-row strong { color: var(--navy); }
+        .link-row { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 22px; }
+        .back-link { color: var(--purple); text-decoration: none; font-weight: 800; font-size: 13px; }
+        .back-link:hover { color: var(--red); }
+    </style>
+</head>
+<body>
+<div class="card">
+    <div class="header">
+        <h2>{{ produkti.emri }}</h2>
+        <p class="supplier">{{ produkti.furnitori|default:"Pa furnitor" }}</p>
+        {% if stoku_kritik %}
+            <span class="status-badge bg-danger"><i class="fa-solid fa-triangle-exclamation"></i> STOK I ULET</span>
+        {% else %}
+            <span class="status-badge bg-success"><i class="fa-solid fa-circle-check"></i> STOK OK</span>
+        {% endif %}
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="message {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="sasia-display">
+        {{ produkti.sasia|sasi_format:produkti.njesia_matese }} <small>{{ produkti.njesia_matese }}</small>
+    </div>
+
+    {% if produkti.pershkrimi %}
+        <p class="description">{{ produkti.pershkrimi }}</p>
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="btn-grid">
+            <button type="submit" name="veprimi" value="shto" class="btn btn-plus">+ SHTO</button>
+            <button type="submit" name="veprimi" value="hiq" class="btn btn-minus">- HIQ</button>
+        </div>
+
+        <div class="manual-box">
+            <label for="shtese_manuale">Sasi Manuale</label>
+            <input id="shtese_manuale" type="number" name="shtese_manuale" min="{% if produkti.njesia_matese == 'KG' %}0.001{% else %}1{% endif %}" step="{% if produkti.njesia_matese == 'KG' %}0.001{% else %}1{% endif %}" placeholder="P.sh. 10">
+            <button type="submit" name="veprimi" value="shto">Shto Sasinë Manuale</button>
+        </div>
+    </form>
+
+    <div class="info-row" style="margin-top: 22px; border-top: 1px solid var(--line); padding-top: 14px;">
+        <span>Skadenca:</span>
+        <strong style="color: {% if afer_skadences %}#dc2626{% else %}#7c3aed{% endif %};">
+            {% if afer_skadences == "SKADUAR" %}Skaduar{% else %}{{ produkti.data_skadences|default:"Pa afat" }}{% endif %}
+        </strong>
+    </div>
+    <div class="info-row"><span>Data e hyrjes:</span><strong>{{ produkti.data_hyrjes|default:"Pa date" }}</strong></div>
+    <div class="info-row"><span>Data e daljes:</span><strong>{{ produkti.data_daljes|default:"Pa date" }}</strong></div>
+
+    <div class="link-row">
+        <a href="{% url 'home' %}" class="back-link">Kthehu Te Lista</a>
+        <a href="{% url 'dashboard_produkti' produkti.id %}" class="back-link">Dashboard</a>
+        <a href="{% url 'raportet' %}" class="back-link">Raportet</a>
+    </div>
+</div>
+</body>
+</html>

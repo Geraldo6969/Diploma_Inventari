@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+{% load inventory_filters %}
+<html lang="sq">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>E-Inventory — Raportet Financiare</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { 
+            --primary: #7c3aed; 
+            --primary-hover: #6d28d9;
+            --danger: #dc2626;
+            --dark-bg: #07172f; 
+            --sidebar-bg: #07172f; 
+            --light-bg: #f2f5fb;
+            --border-color: #d8deea;
+        }
+        
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background:
+                linear-gradient(120deg, rgba(11, 31, 63, 0.13), transparent 34%),
+                linear-gradient(220deg, rgba(124, 58, 237, 0.12), transparent 30%),
+                linear-gradient(35deg, rgba(220, 38, 38, 0.08), transparent 24%),
+                var(--light-bg); 
+            color: #101827; 
+            margin: 0; 
+            padding: 0; 
+        }
+        
+        /* Sidebar Layout */
+        .sidebar { 
+            width: 260px; 
+            height: 100vh; 
+            background: var(--sidebar-bg); 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            color: white; 
+            padding: 28px 24px; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            z-index: 1000; 
+        }
+        
+        .brand { 
+            font-size: 22px; 
+            font-weight: 800; 
+            color: #ddd6fe; 
+            letter-spacing: 0; 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            margin-bottom: 40px; 
+        }
+        
+        .sidebar-menu { list-style: none; padding: 0; margin: 0; }
+        .sidebar-menu li { margin-bottom: 8px; }
+        .sidebar-menu a { 
+            color: #94a3b8; 
+            text-decoration: none; 
+            padding: 12px 16px; 
+            border-radius: 10px; 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            font-weight: 600; 
+            font-size: 14px; 
+            transition: all 0.25s ease; 
+        }
+        
+        .sidebar-menu a:hover, .sidebar-menu a.active { 
+            background: rgba(124, 58, 237, 0.2); 
+            color: #ffffff; 
+        }
+        
+        /* Main Layout */
+        .main-content { margin-left: 260px; padding: 44px; min-height: 100vh; box-sizing: border-box; }
+        .page-header { margin-bottom: 36px; }
+        .page-title h1 { font-size: 28px; font-weight: 800; color: var(--dark-bg); margin: 0; letter-spacing: 0; }
+        
+        /* Kartat e Metrikave - Super Vizualitet */
+        .metric-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
+            gap: 24px; 
+            margin-bottom: 36px; 
+        }
+        
+        .metric-card { 
+            background: white; 
+            border: 1px solid var(--border-color); 
+            border-radius: 8px; 
+            padding: 24px; 
+            box-shadow: 0 4px 20px rgba(15, 23, 42, 0.02); 
+            transition: all 0.2s ease; 
+        }
+        
+        .metric-card:hover { 
+            transform: translateY(-4px); 
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06); 
+        }
+        
+        .metric-card span { font-size: 12px; font-weight: 800; color: var(--dark-bg); text-transform: uppercase; letter-spacing: 0.06em; }
+        .metric-card h3 { font-size: 24px; font-weight: 800; color: #101827; margin-top: 8px; margin-bottom: 0; letter-spacing: 0; }
+        
+        .content-card { 
+            background: white; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 24px rgba(15, 23, 42, 0.03); 
+            border: 1px solid var(--border-color); 
+            padding: 28px; 
+        }
+        
+        /* Tabela */
+        .table thead th { 
+            background: #f6f3ff; 
+            color: var(--dark-bg); 
+            font-weight: 700; 
+            font-size: 11px; 
+            text-transform: uppercase; 
+            letter-spacing: 0.75px; 
+            padding: 18px 16px; 
+            border-bottom: 1px solid var(--border-color); 
+        }
+        
+        .table tbody td { padding: 18px 16px; vertical-align: middle; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
+        
+        /* Stilimi për linqet e dashboardit te tabela */
+        .dashboard-link {
+            color: var(--dark-bg);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .dashboard-link:hover {
+            color: var(--primary) !important;
+            text-decoration: underline !important;
+        }
+        
+        .logout-btn { background: none; border: none; color: #fecaca; width: 100%; text-align: left; padding: 12px 16px; display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 14px; cursor: pointer; }
+        .logout-btn:hover { color: #ffffff; background: rgba(220, 38, 38, 0.16); }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div>
+            <div class="brand"><i class="fa-solid fa-cubes"></i> E-Inventory</div>
+            <ul class="sidebar-menu">
+                <li><a href="{% url 'home' %}"><i class="fa-solid fa-boxes-stacked"></i> Produktet</a></li>
+                <li><a href="{% url 'shto_produkt' %}"><i class="fa-solid fa-plus"></i> Shto Produkt</a></li>
+                <li><a href="{% url 'raportet' %}" class="active"><i class="fa-solid fa-chart-line"></i> Raportet</a></li>
+                <li><a href="{% url 'importo_excel' %}"><i class="fa-solid fa-file-excel"></i> Import Excel</a></li>
+                <li><a href="{% url 'skaner' %}"><i class="fa-solid fa-qrcode"></i> Skano me QR</a></li>
+            </ul>
+        </div>
+        <div>
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Dil nga Sistemi</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="page-header">
+            <div class="page-title">
+                <h1>Analitika & Raportet</h1>
+                <p class="text-muted mb-0">Pasqyra e plotë e performancës financiare, kostove dhe fitimit neto.</p>
+            </div>
+        </div>
+
+        <div class="metric-grid">
+            <div class="metric-card border-start border-primary border-4">
+                <span><i class="fa-solid fa-arrow-down-long text-primary"></i> Totali Hyrje</span>
+                <h3>{{ total_hyrje }}</h3>
+            </div>
+            <div class="metric-card border-start border-danger border-4">
+                <span><i class="fa-solid fa-arrow-up-long text-danger"></i> Totali Dalje</span>
+                <h3>{{ total_jalje|default:total_dalje }}</h3>
+            </div>
+            <div class="metric-card border-start border-secondary border-4">
+                <span><i class="fa-solid fa-receipt text-secondary"></i> Investuar (Kosto Blerje)</span>
+                <h3>{{ total_kosto_blerje|floatformat:2 }} ALL</h3>
+            </div>
+            <div class="metric-card border-start border-success border-4">
+                <span><i class="fa-solid fa-wallet text-success"></i> Inkasuar (Vlera Shitjes)</span>
+                <h3>{{ total_vlere_dalje|floatformat:2 }} ALL</h3>
+            </div>
+            <div class="metric-card border-start {% if total_diferenca_fitimi >= 0 %}border-success{% else %}border-danger{% endif %} border-4">
+                <span><i class="fa-solid fa-scale-balanced"></i> Diferenca (Fitimi Neto)</span>
+                <h3>{{ total_diferenca_fitimi|floatformat:2 }} ALL</h3>
+            </div>
+        </div>
+
+        <div class="content-card">
+            <h3 class="h5 fw-bold text-dark mb-4"><i class="fa-solid fa-boxes-stacked text-muted me-2"></i>Analizë Financiare sipas Artikullit</h3>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Produkti</th>
+                            <th>Hyrje</th>
+                            <th>Dalje / Shitje</th>
+                            <th>Kosto Blerje (Harxhuar)</th>
+                            <th>Vlera e Shitjes (Xhiro)</th>
+                            <th>Diferenca Neto (+ / -)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in summary_rows %}
+                        <tr>
+                            <td class="fw-bold">
+                                <a href="{% url 'dashboard_produkti' row.id %}" class="dashboard-link">
+                                    <i class="fa-solid fa-chart-pie text-muted me-1" style="font-size: 12px;"></i> {{ row.emri }}
+                                </a>
+                            </td>
+                            <td class="text-success fw-semibold">+{{ row.hyrje }} {{ row.njesia }}</td>
+                            <td class="text-danger fw-semibold">-{{ row.dalje }} {{ row.njesia }}</td>
+                            <td class="text-secondary fw-semibold">{{ row.kosto_blerje_dalje|floatformat:2 }} {{ row.monedha }}</td>
+                            <td class="text-dark fw-bold">{{ row.vlere_dalje|floatformat:2 }} {{ row.monedha }}</td>
+                            <td>
+                                {% if row.diferenca_fitimi >= 0 %}
+                                    <span class="text-success fw-bold"><i class="fa-solid fa-circle-arrow-up me-1"></i>+{{ row.diferenca_fitimi|floatformat:2 }} {{ row.monedha }}</span>
+                                {% else %}
+                                    <span class="text-danger fw-bold"><i class="fa-solid fa-circle-arrow-down me-1"></i>{{ row.diferenca_fitimi|floatformat:2 }} {{ row.monedha }}</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="6" class="text-center py-4 text-muted fw-medium">Nuk ka lëvizje të regjistruara për këtë periudhë.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

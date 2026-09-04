@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>QR Code: {{ produkti.emri }}</title>
+    <style>
+        body { font-family: sans-serif; margin: 0; background: #f8f9fa; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .card { background: white; width: 100%; max-width: 380px; text-align: center; padding: 24px; border-radius: 12px; box-shadow: 0 10px 24px rgba(0,0,0,0.12); }
+        img { width: 260px; max-width: 100%; height: auto; }
+        .back-link { display: inline-block; margin-top: 20px; color: #0984e3; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>{{ produkti.emri }}</h1>
+        <img src="data:image/png;base64,{{ qr_kod }}" alt="QR code për {{ produkti.emri }}">
+        <a href="{% url 'home' %}" class="back-link">← Kthehu te lista</a>
+    </div>
+</body>
+</html>
