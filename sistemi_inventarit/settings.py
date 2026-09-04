@@ -75,13 +75,15 @@ WSGI_APPLICATION = 'sistemi_inventarit.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-if os.environ.get('MYSQLHOST'):
+import os
+
+if 'MYSQLHOST' in os.environ or 'MYSQL_URL' in os.environ:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': os.environ.get('MYSQLDATABASE'),
-            'USER': os.environ.get('MYSQLUSER'),
-            'PASSWORD': os.environ.get('MYSQLPASSWORD'),
+            'NAME': os.environ.get('MYSQLDATABASE', 'railway'),
+            'USER': os.environ.get('MYSQLUSER', 'root'),
+            'PASSWORD': os.environ.get('MYSQLPASSWORD', ''),
             'HOST': os.environ.get('MYSQLHOST'),
             'PORT': os.environ.get('MYSQLPORT', '3306'),
         }
