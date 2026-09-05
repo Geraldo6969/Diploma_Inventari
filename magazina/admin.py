@@ -1,28 +1,30 @@
 from datetime import timedelta
 
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.models import User
 from django.utils import timezone
 from django.utils.html import format_html
 
 from .models import LevizjeStoku, Produkti
-from django.contrib.auth.models import User
-from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
-from django.contrib import admin
-from django.contrib.auth.models import User
-from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-
-admin.site.unregister(User)
+# Çregjistrojmë User-in standard
+try:
+    admin.site.unregister(User)
+except admin.sites.NotRegistered:
+    pass
 
 @admin.register(User)
 class CustomUserAdmin(BaseUserAdmin):
     filter_horizontal = ('user_permissions', 'groups')
 
-    class Media:
-        css = {
-            'all': ('admin/css/custom_admin_permissions.css',)
-        }
-
+    def formfield_for_manytomany(self, db_field, request, **kwargs):
+        form_field = super().formfield_for_manytomany(db_field, request, **kwargs)
+        if db_field.name in ('user_permissions', 'groups'):
+            form_field.widget.attrs.update({
+                'style': 'min-width: 420px !important; min-height: 400px !important; font-size: 13px !important;',
+            })
+        return form_field
 
 admin.site.site_header = 'E Inventory'
 admin.site.site_title = 'E Inventory'
