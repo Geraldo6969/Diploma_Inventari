@@ -427,27 +427,19 @@
                                     {% endif %}
                                 </td>
                                 <td>
-  <a href="{% url 'fshi_produktin' p.id %}" 
-     onclick="return confirm('A je i sigurt që dëshiron ta fshish produktin {{ produkti.emri }}?');" 
-     class="btn btn-danger btn-sm"
-     style="background-color: #dc3545; color: white; padding: 5px 10px; border-radius: 4px; text-decoration: none;">
-     Fshi
-  </a>
-</td>
-                            </tr>
-                        {% empty %}
-                            <tr>
-                                <td colspan="8" class="empty-state">Nuk u gjet asnje produkt me filtrat aktuale.</td>
-                                <td>
-  <a href="{% url 'fshi_produktin' p.id %}" 
-     onclick="return confirm('A je i sigurt që dëshiron ta fshish produktin {{ produkti.emri }}?');" 
-     class="btn btn-danger btn-sm"
-     style="background-color: #dc3545; color: white; padding: 5px 10px; border-radius: 4px; text-decoration: none;">
-     Fshi
-  </a>
-</td>
-                            </tr>
-                        {% endfor %}
+                                        <a href="{% url 'fshi_produktin' p.id %}" 
+                                           onclick="return confirm('A je i sigurt që dëshiron ta fshish produktin {{ p.emri }}?');" 
+                                           class="btn btn-danger btn-sm"
+                                           style="background-color: #dc3545; color: white; padding: 5px 10px; border-radius: 4px; text-decoration: none;">
+                                            Fshi
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="9" class="empty-state text-center py-4">Nuk u gjet asnjë produkt me filtrat aktualë.</td>
+                                </tr>
+                            {% endfor %}
                     </tbody>
                 </table>
             </div>
