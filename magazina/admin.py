@@ -5,8 +5,16 @@ from django.utils import timezone
 from django.utils.html import format_html
 
 from .models import LevizjeStoku, Produkti
+from django.contrib.auth.models import User
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
+# Çregjistrojmë konfigurimin e thjeshtë të User
+admin.site.unregister(User)
 
+# Regjistrojmë pamjen e avancuar me filter_horizontal
+@admin.register(User)
+class CustomUserAdmin(BaseUserAdmin):
+    filter_horizontal = ('user_permissions', 'groups')
 admin.site.site_header = 'E Inventory'
 admin.site.site_title = 'E Inventory'
 admin.site.index_title = 'E Inventory'
