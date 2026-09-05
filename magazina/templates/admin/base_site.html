@@ -287,3 +287,36 @@
     }
 </style>
 {% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<style>
+  /* Zgjeron kutitë e përzgjedhjes së lejeve në panelin admin */
+  .selector {
+      width: 100% !important;
+      max-width: 950px !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 15px !important;
+  }
+
+  .selector-available, 
+  .selector-chosen {
+      width: 45% !important;
+      min-width: 380px !important;
+  }
+
+  .selector select {
+      width: 100% !important;
+      min-width: 380px !important;
+      height: 380px !important;
+      font-size: 13px !important;
+      line-height: 1.5 !important;
+  }
+
+  .selector .selector-filter input {
+      width: 100% !important;
+      box-sizing: border-box !important;
+  }
+</style>
+{% endblock %}

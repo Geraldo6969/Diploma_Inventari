@@ -27,7 +27,12 @@ SECRET_KEY = 'django-insecure-+aun1$d*8+2@xma=8qt!9yfy-6k6fpalo865+=hf=j&@-gbvz&
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ['https://*.railway.app']
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.railway.app',
+    'http://*.railway.app',
+    'https://e-inventory.up.railway.app',
+    'http://e-inventory.up.railway.app',
+]
 
 # Application definition
 
@@ -174,5 +179,8 @@ from django.contrib import messages
 MESSAGE_TAGS = {
     messages.INFO: 'alert-info html-message',
 }
+
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'login'
 
 
