@@ -15,7 +15,6 @@ except admin.sites.NotRegistered:
     pass
 
 @admin.register(User)
-@admin.register(User)
 class CustomUserAdmin(BaseUserAdmin):
     filter_horizontal = ('user_permissions', 'groups')
 
