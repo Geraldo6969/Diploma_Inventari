@@ -15,6 +15,7 @@ except admin.sites.NotRegistered:
     pass
 
 @admin.register(User)
+@admin.register(User)
 class CustomUserAdmin(BaseUserAdmin):
     filter_horizontal = ('user_permissions', 'groups')
 
@@ -22,10 +23,10 @@ class CustomUserAdmin(BaseUserAdmin):
         form_field = super().formfield_for_manytomany(db_field, request, **kwargs)
         if db_field.name in ('user_permissions', 'groups'):
             form_field.widget.attrs.update({
-                'style': 'min-width: 420px !important; min-height: 400px !important; font-size: 13px !important;',
+                'style': 'width: 100% !important; min-height: 280px !important; resize: both !important; overflow: auto !important;',
             })
         return form_field
-
+    
 admin.site.site_header = 'E Inventory'
 admin.site.site_title = 'E Inventory'
 admin.site.index_title = 'E Inventory'
