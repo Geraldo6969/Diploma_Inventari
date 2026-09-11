@@ -93,13 +93,24 @@ if os.environ.get('MYSQLHOST') or os.environ.get('MYSQL_URL'):
             'PORT': int(os.environ.get('MYSQLPORT', 3306)),
         }
     }
+if os.environ.get('MYSQLHOST') or os.environ.get('MYSQL_URL'):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': os.environ.get('MYSQLDATABASE', 'railway'),
+            'USER': os.environ.get('MYSQLUSER', 'root'),
+            'PASSWORD': os.environ.get('MYSQLPASSWORD', ''),
+            'HOST': os.environ.get('MYSQLHOST'),
+            'PORT': int(os.environ.get('MYSQLPORT', 3306)),
+        }
+    }
 else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'inventari',
+            'NAME': 'inventari_db',
             'USER': 'root',
-            'PASSWORD': '',
+            'PASSWORD': 'Geri.$.2005g',
             'HOST': '127.0.0.1',
             'PORT': 3306,
         }
