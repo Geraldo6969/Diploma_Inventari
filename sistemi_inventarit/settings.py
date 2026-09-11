@@ -28,6 +28,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['e-inventory.up.railway.app', 'localhost', '127.0.0.1', '*']
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://e-inventory.up.railway.app',
+]
 # Application definition
 
 INSTALLED_APPS = [
