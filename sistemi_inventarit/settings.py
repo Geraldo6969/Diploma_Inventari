@@ -27,12 +27,7 @@ SECRET_KEY = 'django-insecure-+aun1$d*8+2@xma=8qt!9yfy-6k6fpalo865+=hf=j&@-gbvz&
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = [
-    'https://*.railway.app',
-    'http://*.railway.app',
-    'https://e-inventory.up.railway.app',
-    'http://e-inventory.up.railway.app',
-]
+
 
 # Application definition
 
@@ -93,24 +88,13 @@ if os.environ.get('MYSQLHOST') or os.environ.get('MYSQL_URL'):
             'PORT': int(os.environ.get('MYSQLPORT', 3306)),
         }
     }
-if os.environ.get('MYSQLHOST') or os.environ.get('MYSQL_URL'):
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': os.environ.get('MYSQLDATABASE', 'railway'),
-            'USER': os.environ.get('MYSQLUSER', 'root'),
-            'PASSWORD': os.environ.get('MYSQLPASSWORD', ''),
-            'HOST': os.environ.get('MYSQLHOST'),
-            'PORT': int(os.environ.get('MYSQLPORT', 3306)),
-        }
-    }
 else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'inventari_db',
+            'NAME': 'inventari',
             'USER': 'root',
-            'PASSWORD': 'Geri.$.2005g',
+            'PASSWORD': '',
             'HOST': '127.0.0.1',
             'PORT': 3306,
         }
@@ -170,9 +154,9 @@ JAZZMIN_SETTINGS = {
     "welcome_sign": "E Inventory",
     "copyright": "E Inventory",
     "search_model": ["auth.User", "magazina.Produkti"],
-    "topmenu_links": [
-        {"name": "Ballina", "url": "admin:index", "permissions": ["auth.view_user"]},
-        {"name": "Shko tek Aplikacioni", "url": "/"},
+   "topmenu_links": [
+        {"name": "Homepage", "url": "admin:index", "permissions": ["auth.view_user"]},
+        {"name": "Go to Application", "url": "/"},
     ],
     "show_sidebar": True,
     "navigation_expanded": True,
@@ -190,8 +174,4 @@ from django.contrib import messages
 MESSAGE_TAGS = {
     messages.INFO: 'alert-info html-message',
 }
-
-LOGIN_REDIRECT_URL = 'home'
-LOGOUT_REDIRECT_URL = 'login'
-
 
