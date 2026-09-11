@@ -177,3 +177,7 @@ MESSAGE_TAGS = {
     messages.INFO: 'alert-info html-message',
 }
 
+
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'login'
