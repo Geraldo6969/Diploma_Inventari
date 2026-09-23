@@ -10,7 +10,7 @@ from magazina.views import RememberMeLoginView, lista_produkteve
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', RedirectView.as_view(pattern_name='login', permanent=False), name='root'),
+    path('', RedirectView.as_view(pattern_name='dashboard', permanent=False), name='root'),
     path('login/', RememberMeLoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
     path('produkte/', lista_produkteve, name='home'),

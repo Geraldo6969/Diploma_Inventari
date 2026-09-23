@@ -144,10 +144,10 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Shto këtë që pas login-it të shkosh te faqja kryesore
-LOGIN_REDIRECT_URL = 'home'
+LOGIN_REDIRECT_URL = 'dashboard'
 
 # Shto këtë që nëse del (logout), të kthehesh prapë te faqja kryesore
-LOGOUT_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'dashboard'
 
 JAZZMIN_SETTINGS = {
     "site_title": "E Inventory",
