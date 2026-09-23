@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>E-Inventory - Dashboard</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --ink: #101827;
+            --muted: #6b7280;
+            --line: #d8deea;
+            --page: #f2f5fb;
+            --nav: #07172f;
+            --purple: #7c3aed;
+            --red: #dc2626;
+            --green: #16a34a;
+            --orange: #ea580c;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+            color: var(--ink);
+            background:
+                linear-gradient(120deg, rgba(11,31,63,.13), transparent 34%),
+                linear-gradient(220deg, rgba(124,58,237,.12), transparent 30%),
+                linear-gradient(35deg, rgba(220,38,38,.08), transparent 24%),
+                var(--page);
+        }
+
+        .app-shell { display:flex; min-height:100vh; }
+
+        .sidebar {
+            position:fixed;
+            inset:0 auto 0 0;
+            width:264px;
+            padding:26px 22px;
+            background:var(--nav);
+            color:#fff;
+            display:flex;
+            flex-direction:column;
+            justify-content:space-between;
+        }
+
+        .brand {
+            display:flex;
+            align-items:center;
+            gap:12px;
+            margin-bottom:34px;
+            color:#ddd6fe;
+            font-weight:800;
+            font-size:21px;
+        }
+
+        .brand-icon {
+            width:38px;
+            height:38px;
+            display:grid;
+            place-items:center;
+            border-radius:8px;
+            background:linear-gradient(135deg,var(--purple),var(--red));
+            color:white;
+        }
+
+        .sidebar-menu {
+            list-style:none;
+            margin:0;
+            padding:0;
+            display:grid;
+            gap:7px;
+        }
+
+        .sidebar-menu a, .logout-btn {
+            width:100%;
+            min-height:44px;
+            padding:11px 13px;
+            border-radius:8px;
+            display:flex;
+            align-items:center;
+            gap:11px;
+            border:0;
+            background:transparent;
+            color:#a7b6c9;
+            text-decoration:none;
+            font-size:14px;
+            font-weight:700;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background:rgba(124,58,237,.2);
+            color:#fff;
+        }
+
+        .logout-btn {
+            color:#fecaca;
+            cursor:pointer;
+        }
+
+        .main-content {
+            width:calc(100% - 264px);
+            margin-left:264px;
+            padding:34px;
+        }
+
+        .eyebrow {
+            color:var(--red);
+            font-size:12px;
+            font-weight:800;
+            text-transform:uppercase;
+            letter-spacing:.08em;
+            margin-bottom:7px;
+        }
+
+        h1 {
+            margin:0;
+            font-size:31px;
+            font-weight:800;
+        }
+
+        .subtitle {
+            margin-top:7px;
+            color:var(--muted);
+            font-size:14px;
+        }
+
+        .cards {
+            display:grid;
+            grid-template-columns:repeat(5,1fr);
+            gap:14px;
+            margin-top:28px;
+        }
+
+        .card-stat {
+            background:rgba(255,255,255,.94);
+            border:1px solid var(--line);
+            border-radius:12px;
+            padding:20px;
+            box-shadow:0 15px 35px rgba(15,23,42,.06);
+        }
+
+        .card-icon {
+            width:42px;
+            height:42px;
+            border-radius:10px;
+            display:grid;
+            place-items:center;
+            margin-bottom:14px;
+            background:#ede9fe;
+            color:var(--purple);
+            font-size:18px;
+        }
+
+        .card-stat.warning .card-icon {
+            background:#fff7ed;
+            color:var(--orange);
+        }
+
+        .card-stat.danger .card-icon {
+            background:#fee2e2;
+            color:var(--red);
+        }
+
+        .stat-label {
+            color:var(--muted);
+            font-size:12px;
+            font-weight:700;
+            text-transform:uppercase;
+        }
+
+        .stat-number {
+            font-size:28px;
+            font-weight:800;
+            margin-top:4px;
+        }
+
+        .health-panel {
+            margin-top:18px;
+            background:#fff;
+            border:1px solid var(--line);
+            border-radius:14px;
+            padding:28px;
+            display:flex;
+            align-items:center;
+            gap:38px;
+            box-shadow:0 18px 38px rgba(15,23,42,.06);
+        }
+
+        .score-circle {
+            width:180px;
+            height:180px;
+            min-width:180px;
+            border-radius:50%;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:center;
+            border:14px solid
+            {% if health_score >= 90 %}
+                #16a34a
+            {% elif health_score >= 70 %}
+                #eab308
+            {% elif health_score >= 40 %}
+                #ea580c
+            {% else %}
+                #dc2626
+            {% endif %};
+            background:#fff;
+            box-shadow:0 10px 30px rgba(15,23,42,.10);
+        }
+
+        .score-number {
+            font-size:46px;
+            line-height:1;
+            font-weight:800;
+        }
+
+        .score-max {
+            color:var(--muted);
+            font-size:13px;
+            margin-top:4px;
+        }
+
+        .health-info h2 {
+            margin:0 0 8px;
+            font-size:24px;
+            font-weight:800;
+        }
+
+        .health-status {
+            display:inline-block;
+            padding:7px 13px;
+            border-radius:30px;
+            background:#ede9fe;
+            color:#6d28d9;
+            font-size:13px;
+            font-weight:800;
+            margin-bottom:12px;
+        }
+
+        .health-info p {
+            color:var(--muted);
+            max-width:650px;
+            margin:0;
+            line-height:1.7;
+        }
+
+        .smart-panel {
+            margin-top:18px;
+            background:linear-gradient(135deg,#07172f,#172554);
+            color:#fff;
+            border-radius:14px;
+            padding:24px;
+        }
+
+        .smart-panel h3 {
+            font-size:19px;
+            font-weight:800;
+            margin-bottom:8px;
+        }
+
+        .smart-panel p {
+            color:#cbd5e1;
+            margin:0;
+            font-size:14px;
+        }
+
+        @media(max-width:1100px) {
+            .cards { grid-template-columns:repeat(2,1fr); }
+        }
+
+        @media(max-width:700px) {
+            .sidebar { position:static; width:100%; }
+            .app-shell { display:block; }
+            .main-content { width:100%; margin-left:0; padding:18px; }
+            .cards { grid-template-columns:1fr; }
+            .health-panel { flex-direction:column; align-items:flex-start; }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app-shell">
+
+    <aside class="sidebar">
+
+        <div>
+            <div class="brand">
+                <span class="brand-icon">
+                    <i class="fa-solid fa-cubes"></i>
+                </span>
+                E-Inventory
+            </div>
+
+            <ul class="sidebar-menu">
+
+                <li>
+                    <a href="{% url 'dashboard' %}" class="active">
+                        <i class="fa-solid fa-gauge-high"></i>
+                        Dashboard
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'home' %}">
+                        <i class="fa-solid fa-boxes-stacked"></i>
+                        Produktet
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'shto_produkt' %}">
+                        <i class="fa-solid fa-plus"></i>
+                        Shto Produkt
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'raportet' %}">
+                        <i class="fa-solid fa-chart-line"></i>
+                        Raportet
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'importo_excel' %}">
+                        <i class="fa-solid fa-file-excel"></i>
+                        Import Excel
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'skaner' %}">
+                        <i class="fa-solid fa-qrcode"></i>
+                        Skano me QR
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="logout-btn">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Dil nga Sistemi
+            </button>
+        </form>
+
+    </aside>
+
+    <main class="main-content">
+
+        <div class="eyebrow">PANELI KRYESOR</div>
+        <h1>Dashboard</h1>
+
+        <p class="subtitle">
+            Përmbledhje inteligjente e gjendjes aktuale të inventarit.
+        </p>
+
+        <div class="cards">
+
+            <div class="card-stat">
+                <div class="card-icon">
+                    <i class="fa-solid fa-boxes-stacked"></i>
+                </div>
+                <div class="stat-label">Produkte totale</div>
+                <div class="stat-number">{{ total_produkte }}</div>
+            </div>
+
+            <div class="card-stat warning">
+                <div class="card-icon">
+                    <i class="fa-solid fa-arrow-trend-down"></i>
+                </div>
+                <div class="stat-label">Stok i ulët</div>
+                <div class="stat-number">{{ stok_ulet }}</div>
+            </div>
+
+            <div class="card-stat danger">
+                <div class="card-icon">
+                    <i class="fa-solid fa-box-open"></i>
+                </div>
+                <div class="stat-label">Pa stok</div>
+                <div class="stat-number">{{ pa_stok }}</div>
+            </div>
+
+            <div class="card-stat warning">
+                <div class="card-icon">
+                    <i class="fa-solid fa-clock"></i>
+                </div>
+                <div class="stat-label">Skadojnë së shpejti</div>
+                <div class="stat-number">{{ skadon_shpejt }}</div>
+            </div>
+
+            <div class="card-stat danger">
+                <div class="card-icon">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <div class="stat-label">Të skaduara</div>
+                <div class="stat-number">{{ skaduar }}</div>
+            </div>
+
+        </div>
+
+        <section class="health-panel">
+
+            <div class="score-circle">
+                <div class="score-number">{{ health_score }}</div>
+                <div class="score-max">nga 100</div>
+            </div>
+
+            <div class="health-info">
+
+                <div class="eyebrow">
+                    INVENTORY HEALTH SCORE
+                </div>
+
+                <h2>Gjendja e Inventarit</h2>
+
+                <div class="health-status">
+                    {{ health_status }}
+                </div>
+
+                <p>
+                    Rezultati llogaritet automatikisht duke analizuar
+                    produktet pa stok, stokun e ulët dhe datat e
+                    skadencës. Sa më i lartë rezultati, aq më e mirë
+                    është gjendja aktuale e inventarit.
+                </p>
+
+            </div>
+
+        </section>
+
+        <section class="smart-panel">
+
+            <h3>
+                <i class="fa-solid fa-wand-magic-sparkles me-2"></i>
+                Sugjerime Inteligjente
+            </h3>
+
+            {% if skaduar > 0 %}
+                <p>⚠️ Ke {{ skaduar }} produkt/e të skaduara që kërkojnë vëmendje.</p>
+
+            {% elif pa_stok > 0 %}
+                <p>📦 Ke {{ pa_stok }} produkt/e pa stok. Sugjerohet rifurnizimi.</p>
+
+            {% elif skadon_shpejt > 0 %}
+                <p>🏷️ Disa produkte po afrohen me skadencën. Mund të aplikosh oferta promocionale.</p>
+
+            {% elif stok_ulet > 0 %}
+                <p>📉 Disa produkte kanë arritur nivel të ulët të stokut.</p>
+
+            {% else %}
+                <p>✅ Inventari është në gjendje të mirë. Nuk ka probleme kritike për momentin.</p>
+            {% endif %}
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

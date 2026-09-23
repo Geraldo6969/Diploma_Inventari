@@ -233,6 +233,58 @@ class RememberMeLoginView(LoginView):
 
 
 @login_required
+def dashboard(request):
+    produktet = produktet_e_perdoruesit(request.user)
+    today = timezone.localdate()
+
+    total_produkte = produktet.count()
+
+    pa_stok = produktet.filter(sasia__lte=0).count()
+
+    stok_ulet = produktet.filter(
+        sasia__gt=0,
+        sasia__lte=F('stoku_minimal')
+    ).count()
+
+    skaduar = produktet.filter(
+        data_skadences__lt=today
+    ).count()
+
+    skadon_shpejt = produktet.filter(
+        data_skadences__gte=today,
+        data_skadences__lte=today + timedelta(days=15)
+    ).count()
+
+    # Inventory Health Score
+    score = 100
+    score -= pa_stok * 15
+    score -= stok_ulet * 8
+    score -= skaduar * 15
+    score -= skadon_shpejt * 5
+
+    score = max(0, min(100, score))
+
+    if score >= 90:
+        status = "Shkëlqyeshëm"
+    elif score >= 70:
+        status = "Mirë"
+    elif score >= 40:
+        status = "Kërkon vëmendje"
+    else:
+        status = "Kritik"
+
+    context = {
+        'total_produkte': total_produkte,
+        'pa_stok': pa_stok,
+        'stok_ulet': stok_ulet,
+        'skaduar': skaduar,
+        'skadon_shpejt': skadon_shpejt,
+        'health_score': score,
+        'health_status': status,
+    }
+
+    return render(request, 'magazina/dashboard.html', context)
+@login_required
 def lista_produkteve(request):
     query = request.GET.get('q', '').strip()
     njesia = request.GET.get('njesia', '').strip()
