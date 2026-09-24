@@ -15,6 +15,11 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
     path('produkte/', lista_produkteve, name='home'),
     path('dashboard/', views.dashboard, name='dashboard'),
+    path(
+    'produkti/<int:produkt_id>/apliko-smart-discount/',
+    views.apliko_smart_discount,
+    name='apliko_smart_discount'
+),
     path('produkte/shto/', views.shto_produkt, name='shto_produkt'),
     path('raportet/', views.raportet, name='raportet'),
     path('importo-excel/', views.importo_excel, name='importo_excel'),

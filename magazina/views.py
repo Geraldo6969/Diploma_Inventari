@@ -298,6 +298,31 @@ def dashboard(request):
 
     return render(request, 'magazina/dashboard.html', context)
 @login_required
+@require_POST
+def apliko_smart_discount(request, produkt_id):
+    produkt = get_object_or_404(
+        produktet_e_perdoruesit(request.user),
+        id=produkt_id
+    )
+
+    sugjerimi = produkt.ulja_e_sugjeruar()
+
+    if not sugjerimi or sugjerimi['status'] != 'sugjerim':
+        messages.error(request, 'Nuk ka ofertë të vlefshme për këtë produkt.')
+        return redirect('dashboard')
+
+    produkt.ne_oferte = True
+    produkt.cmimi_ofertes = sugjerimi['cmimi']
+    produkt.save()
+
+    messages.success(
+        request,
+        f'Oferta -{sugjerimi["perqindje"]}% u aplikua për {produkt.emri}.'
+    )
+
+    return redirect('dashboard')
+
+@login_required
 def lista_produkteve(request):
     query = request.GET.get('q', '').strip()
     njesia = request.GET.get('njesia', '').strip()
@@ -849,6 +874,8 @@ def eksporto_word(request):
 
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
+from django.views.decorators.http import require_POST
+
 from .models import Produkti
 
 def fshi_produktin(request, produkt_id):

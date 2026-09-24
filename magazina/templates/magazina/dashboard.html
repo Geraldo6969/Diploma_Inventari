@@ -534,6 +534,28 @@
                             </strong>
                         </div>
 
+                        <form method="post"
+      action="{% url 'apliko_smart_discount' item.produkt.id %}"
+      style="margin-top: 14px;">
+
+    {% csrf_token %}
+
+    <button type="submit"
+            onclick="return confirm('Dëshiron ta aplikosh këtë ofertë për {{ item.produkt.emri|escapejs }}?');"
+            style="
+                border: 0;
+                border-radius: 8px;
+                padding: 10px 16px;
+                background: #7c3aed;
+                color: white;
+                font-weight: 700;
+                cursor: pointer;
+            ">
+        <i class="fa-solid fa-tag"></i>
+        Apliko ofertën -{{ item.sugjerimi.perqindje }}%
+    </button>
+</form>
+
                     {% endif %}
 
                 </div>
