@@ -22,6 +22,7 @@ import openpyxl
 from docx import Document
 from django.http import HttpResponse
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+from django.views.decorators.http import require_POST
 
 
 
@@ -874,7 +875,6 @@ def eksporto_word(request):
 
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
-from django.views.decorators.http import require_POST
 
 from .models import Produkti
 
