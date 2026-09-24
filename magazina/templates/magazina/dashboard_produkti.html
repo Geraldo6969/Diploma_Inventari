@@ -84,6 +84,12 @@
         <div>
             <div class="brand"><i class="fa-solid fa-cubes"></i> E-Inventory</div>
             <ul class="sidebar-menu">
+                <li>
+    <a href="{% url 'dashboard' %}">
+        <i class="fa-solid fa-gauge-high"></i>
+        Dashboard
+    </a>
+</li>
                 <li><a href="{% url 'home' %}" class="active"><i class="fa-solid fa-boxes-stacked"></i> Produktet</a></li>
                 <li><a href="{% url 'shto_produkt' %}"><i class="fa-solid fa-plus"></i> Shto Produkt</a></li>
                 <li><a href="{% url 'raportet' %}"><i class="fa-solid fa-chart-line"></i> Raportet</a></li>
