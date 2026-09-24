@@ -273,6 +273,18 @@ def dashboard(request):
     else:
         status = "Kritik"
 
+    # Smart Discount Suggestions
+    smart_discounts = []
+
+    for produkt in produktet:
+        sugjerimi = produkt.ulja_e_sugjeruar()
+
+        if sugjerimi:
+            smart_discounts.append({
+                'produkt': produkt,
+                'sugjerimi': sugjerimi,
+            })
+
     context = {
         'total_produkte': total_produkte,
         'pa_stok': pa_stok,
@@ -281,6 +293,7 @@ def dashboard(request):
         'skadon_shpejt': skadon_shpejt,
         'health_score': score,
         'health_status': status,
+        'smart_discounts': smart_discounts,
     }
 
     return render(request, 'magazina/dashboard.html', context)

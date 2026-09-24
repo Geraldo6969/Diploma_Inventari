@@ -465,6 +465,98 @@
             {% endif %}
 
         </section>
+        <section style="margin-top: 22px;">
+    <div style="
+        background: white;
+        border: 1px solid #d8deea;
+        border-radius: 12px;
+        padding: 22px;
+        box-shadow: 0 18px 38px rgba(15,23,42,.06);
+    ">
+        <h2 style="margin-top: 0;">
+            <i class="fa-solid fa-tags"></i>
+            Smart Discounts
+        </h2>
+
+        <p style="color: #6b7280;">
+            Sugjerime automatike për uljen e çmimeve sipas datës së skadencës.
+        </p>
+
+        {% if smart_discounts %}
+
+            {% for item in smart_discounts %}
+
+                <div style="
+                    border: 1px solid #e5e7eb;
+                    border-radius: 10px;
+                    padding: 16px;
+                    margin-top: 12px;
+                ">
+
+                    <strong style="font-size: 17px;">
+                        {{ item.produkt.emri }}
+                    </strong>
+
+                    {% if item.sugjerimi.status == "skaduar" %}
+
+                        <div style="margin-top: 8px; color: #dc2626; font-weight: 700;">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            Produkti ka skaduar — oferta nuk rekomandohet.
+                        </div>
+
+                    {% else %}
+
+                        <div style="margin-top: 8px;">
+                            Skadon pas
+                            <strong>{{ item.sugjerimi.dite }} ditësh</strong>
+                        </div>
+
+                        <div style="margin-top: 5px;">
+                            Sugjerim:
+                            <strong style="color: #7c3aed;">
+                                -{{ item.sugjerimi.perqindje }}%
+                            </strong>
+                        </div>
+
+                        <div style="margin-top: 5px;">
+                            Çmimi aktual:
+                            <strong>
+                                {{ item.produkt.cmimi_shitjes|floatformat:2 }}
+                                {{ item.produkt.monedha }}
+                            </strong>
+
+                            →
+
+                            Çmimi i sugjeruar:
+                            <strong style="color: #16a34a;">
+                                {{ item.sugjerimi.cmimi|floatformat:2 }}
+                                {{ item.produkt.monedha }}
+                            </strong>
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div style="
+                margin-top: 15px;
+                padding: 14px;
+                background: #f0fdf4;
+                border-radius: 8px;
+                color: #166534;
+                font-weight: 700;
+            ">
+                <i class="fa-solid fa-circle-check"></i>
+                Aktualisht nuk ka produkte që kërkojnë ulje të çmimit.
+            </div>
+
+        {% endif %}
+    </div>
+</section>
 
     </main>
 

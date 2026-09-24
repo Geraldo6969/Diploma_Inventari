@@ -88,6 +88,41 @@ class Produkti(models.Model):
             self.qr_code.save(filename, File(canvas), save=False)
             super().save(update_fields=['qr_code'])
 
+    def ulja_e_sugjeruar(self):
+        if not self.data_skadences:
+            return None
+
+        from django.utils import timezone
+
+        sot = timezone.localdate()
+        dite_mbetura = (self.data_skadences - sot).days
+
+        if dite_mbetura < 0:
+            return {
+                'status': 'skaduar',
+                'dite': dite_mbetura,
+                'perqindje': 0,
+                'cmimi': None,
+            }
+
+        if 1 <= dite_mbetura <= 6:
+            perqindje = 30
+        elif 7 <= dite_mbetura <= 14:
+            perqindje = 20
+        elif 15 <= dite_mbetura <= 30:
+            perqindje = 10
+        else:
+            return None
+
+        cmimi_ri = self.cmimi_shitjes * (100 - perqindje) / 100
+
+        return {
+            'status': 'sugjerim',
+            'dite': dite_mbetura,
+            'perqindje': perqindje,
+            'cmimi': cmimi_ri,
+        }
+
     def __str__(self):
         return self.emri
 
