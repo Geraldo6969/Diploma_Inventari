@@ -105,7 +105,14 @@
         <div class="manual-box">
             <label for="shtese_manuale">Sasi Manuale</label>
             <input id="shtese_manuale" type="number" name="shtese_manuale" min="{% if produkti.njesia_matese == 'KG' %}0.001{% else %}1{% endif %}" step="{% if produkti.njesia_matese == 'KG' %}0.001{% else %}1{% endif %}" placeholder="P.sh. 10">
-            <button type="submit" name="veprimi" value="shto">Shto Sasinë Manuale</button>
+           <div style="display: flex; gap: 10px;">
+    <button type="submit" name="veprimi" value="shto" style="flex: 1; background-color: #0b1a30; color: white; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">
+        + Shto Manuale
+    </button>
+    <button type="submit" name="veprimi" value="hiq" style="flex: 1; background-color: #dc3545; color: white; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">
+        - Hiq Manuale
+    </button>
+</div>
         </div>
     </form>
 
