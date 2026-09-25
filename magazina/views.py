@@ -494,7 +494,11 @@ def menaxho_produktin(request, produkt_id):
                 produkti.sasia += vlera_per_ndryshim
                 lloji_levizjes = 'HYRJE'
             else:
-                produkti.sasia = max(produkti.sasia - vlera_per_ndryshim, Decimal('0'))
+                if produkti.sasia < vlera_per_ndryshim:
+                    messages.error(request, f"Nuk mund të heqësh {vlera_per_ndryshim} copë sepse ke vetëm {produkti.sasia} në stok.")
+                    return redirect('menaxho_produktin', produkt_id=produkti.id)
+                
+                produkti.sasia -= vlera_per_ndryshim
                 lloji_levizjes = 'DALJE'
 
             produkti.save()
