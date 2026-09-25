@@ -81,10 +81,38 @@
         
         .btn-save { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%) !important; color: white !important; font-weight: 800; padding: 14px 28px; border-radius: 8px; border: none; box-shadow: 0 8px 18px rgba(124, 58, 237, 0.2); transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 8px; }
         .btn-save:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(124, 58, 237, 0.28); }
+        <!-- Add after .btn-save:hover -->
+
+.btn-delete {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+    font-weight: 800;
+    padding: 14px 28px;
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 8px 18px rgba(220, 38, 38, 0.2);
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-delete:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(220, 38, 38, 0.28);
+}
         .btn-cancel { color: #64748b; text-decoration: none; font-weight: 700; font-size: 14px; padding: 14px 20px; transition: color 0.2s; }
         .btn-cancel:hover { color: #1e293b; }
         .logout-btn { background: none; border: none; color: #fecaca; width: 100%; text-align: left; padding: 12px 16px; display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 14px; cursor: pointer; }
-        .logout-btn:hover { color: #ffffff; background: rgba(220, 38, 38, 0.16); }
+        .        <div class="d-flex align-items-center gap-3 mt-4 pt-3 border-top">
+            <button type="submit" class="btn-save">Save</button>
+            <a href="{% url 'product_list' %}" class="btn-cancel">Cancel</a>
+            <button type="submit" name="delete" value="1"
+                    class="btn-delete ms-auto"
+                    onclick="return confirm('Are you sure you want to delete this product?');">
+                Delete Product
+            </button>
+        </div>logout-btn:hover { color: #ffffff; background: rgba(220, 38, 38, 0.16); }
     </style>
 </head>
 <body>
@@ -215,18 +243,13 @@
                 </div>
 
                 <div class="d-flex align-items-center gap-3 mt-4 pt-3 border-top">
-                    <button type="submit" class="btn-save"><i class="fa-solid fa-floppy-disk"></i> Ruaj Ndryshimet</button>
-                    <a href="{% url 'home' %}" class="btn-cancel">Anulo</a>
-                    <div class="d-flex align-items-center gap-3 mt-4 pt-3 border-top">
-    <button type="submit" class="btn-save"><i class="fa-solid fa-floppy-disk"></i> Ruaj</button>
-    <a href="{% url 'home' %}" class="btn-cancel">Anulo</a>
-    
-    <a href="{% url 'fshi_produktin' produkt.id %}" 
-       onclick="return confirm('A je i sigurt që dëshiron ta fshish këtë produkt përfundimisht?');" 
-       class="btn btn-danger ms-auto"
-       style="background-color: #dc3545; color: white; padding: 10px 18px; border-radius: 8px; text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; gap: 8px;">
-        <i class="fa-solid fa-trash-can"></i> Fshi Produktin
-    </a>
+    <button type="submit" class="btn-save">Save</button>
+    <a href="{% url 'product_list' %}" class="btn-cancel">Cancel</a>
+    <button type="submit" name="delete" value="1"
+            class="btn-delete ms-auto"
+            onclick="return confirm('Are you sure you want to delete this product?');">
+        Delete Product
+    </button>
 </div>
                 </div>
             </form>
