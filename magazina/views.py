@@ -740,9 +740,7 @@ def gjenero_qr(request, produkt_id):
     produkti = get_object_or_404(produktet_e_perdoruesit(request.user), id=produkt_id)
 
     # Ndërtojmë linkun e plotë për te faqja 'menaxho_produktin'
-    url_menaxho = request.build_absolute_uri(
-        reverse('menaxho_produktin', kwargs={'produkt_id': produkti.id})
-    )
+    url = request.build_absolute_uri(reverse('menaxho_produktin', args=[produkti.id]))
 
     qr = qrcode.QRCode(version=1, box_size=10, border=5)
     qr.add_data(url_menaxho)
