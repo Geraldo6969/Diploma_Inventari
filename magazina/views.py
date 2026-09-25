@@ -729,12 +729,19 @@ def raportet(request):
         'total_diferenca_fitimi': total_diferenca_fitimi,
     })
 
+from django.urls import reverse
+
 @login_required
 def gjenero_qr(request, produkt_id):
     produkti = get_object_or_404(produktet_e_perdoruesit(request.user), id=produkt_id)
 
+    # Ndërtojmë linkun e plotë për te faqja 'menaxho_produktin'
+    url_menaxho = request.build_absolute_uri(
+        reverse('menaxho_produktin', kwargs={'produkt_id': produkti.id})
+    )
+
     qr = qrcode.QRCode(version=1, box_size=10, border=5)
-    qr.add_data(str(produkti.id))
+    qr.add_data(url_menaxho)
     qr.make(fit=True)
 
     img = qr.make_image(fill_color="black", back_color="white")
@@ -744,7 +751,6 @@ def gjenero_qr(request, produkt_id):
     qr_base64 = base64.b64encode(buffer.getvalue()).decode()
 
     return render(request, 'magazina/qr_kod.html', {'qr_kod': qr_base64, 'produkti': produkti})
-
 
 
 @login_required

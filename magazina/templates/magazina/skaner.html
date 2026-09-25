@@ -93,7 +93,7 @@
             document.getElementById('statusi-skanimit').className = "alert alert-success border mt-3 fw-bold text-success";
             document.getElementById('statusi-skanimit').innerText = "✅ Kod u gjet! Po ju ridrejtojmë...";
             // Pas skanimit të saktë, dërgoje direkt tek URL-ja që ka brenda kodi QR
-            window.location.href = decodedText;
+            window.location.href = `/produkti/${result}/menaxho/`;
         }
 
         let html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 });
